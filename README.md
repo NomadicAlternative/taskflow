@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TaskFlow
 
-## Getting Started
+A web app that helps students and small teams organize their projects and manage tasks in one place.
 
-First, run the development server:
+## Team 6
+
+| Member                | GitHub                                                       |
+| --------------------- | ------------------------------------------------------------ |
+| Diego Garcia          | [@NomadicAlternative](https://github.com/NomadicAlternative) |
+| Joshua Abinadi Cirilo | _add username_                                               |
+| _add name_            | _add username_                                               |
+| _add name_            | _add username_                                               |
+
+**Synchronous meeting:** Wednesdays at **22:00 UTC**.
+
+## Tech stack
+
+| Layer                  | Technology               |
+| ---------------------- | ------------------------ |
+| Framework              | Next.js (App Router)     |
+| Language               | TypeScript (strict mode) |
+| Styling                | Tailwind CSS             |
+| Linting and formatting | ESLint + Prettier        |
+| Deployment             | Vercel                   |
+
+## Getting started
 
 ```bash
+git clone <repository-url>
+cd taskflow
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Command                | What it does                             |
+| ---------------------- | ---------------------------------------- |
+| `npm run dev`          | Development server                       |
+| `npm run build`        | Production build                         |
+| `npm run lint`         | ESLint                                   |
+| `npm run format`       | Formats the code with Prettier           |
+| `npm run format:check` | Checks formatting without changing files |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Branching
 
-## Learn More
+`main` is protected. Nobody pushes to it directly.
 
-To learn more about Next.js, take a look at the following resources:
+1. Branch off `main` using `feature/<short-description>`, for example `feature/user-auth`.
+2. Commit your work on that branch.
+3. Open a pull request into `main`.
+4. At least one other team member must review and approve it.
+5. Merge only after the review.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Keep pull requests small and focused on one thing. A pull request that does five things is a pull request nobody reviews properly.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Code standards
 
-## Deploy on Vercel
+- **Formatting** is handled by Prettier. The rules live in `.prettierrc` and are shared by the whole team, so nobody argues about style in a review. Run `npm run format` before committing.
+- **Correctness** is handled by ESLint. `eslint-config-prettier` is applied last so the linter does not report formatting issues.
+- Commits follow [Conventional Commits](https://www.conventionalcommits.org/): `feat:`, `fix:`, `docs:`, `chore:`, `refactor:`.
+- TypeScript runs in strict mode and `any` is not allowed. Types are explicit on component props.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Project structure
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+taskflow/
+├── app/          Routes, layouts and API route handlers
+├── components/   Reusable UI components
+├── lib/          Types, data access and shared helpers
+└── public/       Static assets
+```
+
+## Specification
+
+The project specification lives in [`specs/`](./specs). Read it before starting a feature — it is the source of truth for what we are building and what is out of scope.
+
+## Coordination
+
+Beyond the weekly meeting, keep the team posted asynchronously in our Microsoft Teams channel: what you finished, what you are working on next, and anything blocking you.
