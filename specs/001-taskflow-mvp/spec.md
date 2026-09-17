@@ -8,7 +8,7 @@
 
 **Input**: Team 6 project proposal (Week 01), selected during the Week 02 team meeting.
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Account Access (Priority: P1)
 
@@ -112,7 +112,7 @@ accordingly.
 - The same task title is used twice inside one project.
 - A user with many projects loads the list — is it paginated, and at what point does it matter?
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -124,17 +124,22 @@ accordingly.
 - **FR-006**: System MUST allow each task to hold a status of To Do, In Progress or Completed.
 - **FR-007**: System MUST persist all data so it survives a page reload and a new session.
 - **FR-008**: System MUST validate required fields and reject empty titles on both projects and
-   tasks, showing a message that says what is wrong.
+  tasks, showing a message that says what is wrong.
 - **FR-009**: System MUST reject any request that targets a record the signed-in user does not own.
 - **FR-010**: System MUST provide a dashboard showing the user's projects and a count of tasks by
-   status.
-- **FR-011**: System MUST authenticate users via [NEEDS CLARIFICATION: Auth.js v5 or Clerk — the
-   choice determines the session shape and how the user identifier reaches the data layer].
-- **FR-012**: System MUST store data in [NEEDS CLARIFICATION: PostgreSQL (Supabase or Prisma) or
-   MongoDB — open, and it determines whether the data model is relational or document-shaped].
+  status.
+- **FR-011**: System MUST authenticate users with **Auth.js v5**. Decided by the team on
+  2026-09-17. The session shape and the way the user identifier reaches the data layer follow
+  from that choice.
+- **FR-012**: System MUST store data in **PostgreSQL**. Decided by the team on 2026-09-17.
+  Two sub-decisions are still open and MUST be settled before the first data-backed branch is
+  merged: the host (Supabase or Render) and the access layer (Prisma or the host's client).
+  **Known constraint:** a free Render PostgreSQL database expires 30 days after creation and is
+  deleted after a 14-day grace period, which is shorter than the remaining term. Verify the
+  host's limits before committing.
 - **FR-013**: System MUST provide a working API route that reads real data from the database and
-   serves it to the client, satisfying the course requirement for a full client → server → database
-   cycle.
+  serves it to the client, satisfying the course requirement for a full client → server → database
+  cycle.
 
 ### Key Entities
 
@@ -146,7 +151,7 @@ accordingly.
   description, status (To Do | In Progress | Completed), owning project, created date.
   Relationships: belongs to exactly one Project.
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 
