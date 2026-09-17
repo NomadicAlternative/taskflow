@@ -4,12 +4,12 @@ A web app that helps students and small teams organize their projects and manage
 
 ## Team 6
 
-| Member                | GitHub                                                       |
-| --------------------- | ------------------------------------------------------------ |
-| Diego Garcia          | [@NomadicAlternative](https://github.com/NomadicAlternative) |
-| Joshua Abinadi Cirilo | _add username_                                               |
-| _add name_            | _add username_                                               |
-| _add name_            | _add username_                                               |
+| Member                   | GitHub                                                       |
+| ------------------------ | ------------------------------------------------------------ |
+| Diego Artemio Garcia     | [@NomadicAlternative](https://github.com/NomadicAlternative) |
+| Joshua Abinadi Cirilo    | [@joshuacirilo](https://github.com/joshuacirilo)             |
+| Nelson Mandella Akpomah  | [@mandellasly1](https://github.com/mandellasly1)             |
+| Taiye Gabriel Ade-Benson | _add username_                                               |
 
 **Synchronous meeting:** Wednesdays at **22:00 UTC**.
 
