@@ -42,6 +42,29 @@ Open [http://localhost:3000](http://localhost:3000).
 | `npm run format`       | Formats the code with Prettier           |
 | `npm run format:check` | Checks formatting without changing files |
 
+## Graphify (local code graph)
+
+[Graphify](https://github.com/Graphify-Labs/graphify) is an optional development tool. Its official Python package is `graphifyy`; it is separate from the app's npm dependencies.
+
+Set up the project-local environment with [uv](https://docs.astral.sh/uv/) in PowerShell:
+
+```powershell
+uv venv .graphify-venv --python 3.12
+uv pip install --python .graphify-venv/Scripts/python.exe graphifyy==0.9.71
+.\.graphify-venv\Scripts\graphify.exe install --project --platform agents
+```
+
+Build or refresh the code graph locally, without an API key:
+
+```powershell
+.\.graphify-venv\Scripts\graphify.exe extract . --code-only --max-workers 2
+.\.graphify-venv\Scripts\graphify.exe cluster-only . --no-label
+.\.graphify-venv\Scripts\graphify.exe query "RootLayout"
+Start-Process .\graphify-out\graph.html
+```
+
+The generated graph, report, Python environment, and local assistant skill are ignored by Git and Prettier. `--code-only` skips semantic analysis of documents and media. The skill is installed under `.agents/skills/graphify/` for Codex; invoke it with `$graphify` in a new turn and use the project-local executable above. Terminal commands use `graphify`, without a leading slash.
+
 ## Branching
 
 `main` is protected. Nobody pushes to it directly.

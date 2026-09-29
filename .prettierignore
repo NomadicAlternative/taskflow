@@ -1,3 +1,6 @@
 .next
 node_modules
 package-lock.json
+.graphify-venv
+graphify-out
+.agents/skills/graphify
