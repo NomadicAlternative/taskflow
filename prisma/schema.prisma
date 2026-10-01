@@ -25,6 +25,7 @@ model User {
   // local password, so the hash stays nullable.
   hashedPassword String?
   createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   projects Project[]
 }
@@ -34,11 +35,14 @@ model Project {
   title       String
   description String?
   createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   ownerId String
   owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
   tasks Task[]
+
+  @@index([ownerId])
 }
 
 model Task {
@@ -47,7 +51,10 @@ model Task {
   description String?
   status      TaskStatus @default(TODO)
   createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 
   projectId String
   project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
 }
