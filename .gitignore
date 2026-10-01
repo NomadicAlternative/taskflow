@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Graphify: local Python environment, generated graphs and assistant skill
+/.graphify-venv/
+/graphify-out/
+/.agents/skills/graphify/
