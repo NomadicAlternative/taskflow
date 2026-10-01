@@ -17,6 +17,9 @@ const eslintConfig = defineConfig([
     'out/**',
     'build/**',
     'next-env.d.ts',
+    // Local Graphify output, including copied builds.
+    'graphify-out/**',
+    '.graphify-venv/**',
   ]),
 ]);
 

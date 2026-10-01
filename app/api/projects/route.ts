@@ -1,14 +1,19 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { createProject, getProjects } from '@/lib/projects';
+import { getCurrentUser } from '@/lib/session';
 
-// Auth (Auth.js v5) is not wired up yet. Until then, every created project is
-// owned by this placeholder user id. This is replaced by the signed-in user's
-// id from the session once auth lands.
-const SEED_OWNER_ID = 'seed-user';
+function unauthorized() {
+  return NextResponse.json({ error: 'Not signed in' }, { status: 401 });
+}
 
 export async function GET() {
+  const user = await getCurrentUser();
+  if (user === null) {
+    return unauthorized();
+  }
+
   try {
-    const projects = await getProjects();
+    const projects = await getProjects(user.id);
     return NextResponse.json(projects);
   } catch (error) {
     console.error('Failed to fetch projects', error);
@@ -20,6 +25,11 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  const user = await getCurrentUser();
+  if (user === null) {
+    return unauthorized();
+  }
+
   let body: unknown;
   try {
     body = await request.json();
@@ -53,7 +63,7 @@ export async function POST(request: NextRequest) {
     const project = await createProject({
       title: title.trim(),
       description: typeof description === 'string' ? description : undefined,
-      ownerId: SEED_OWNER_ID,
+      ownerId: user.id,
     });
     return NextResponse.json(project, { status: 201 });
   } catch (error) {

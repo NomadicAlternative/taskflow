@@ -20,27 +20,47 @@ A web app that helps students and small teams organize their projects and manage
 | Framework              | Next.js (App Router)     |
 | Language               | TypeScript (strict mode) |
 | Styling                | Tailwind CSS             |
+| Database               | PostgreSQL on Supabase   |
+| Data access            | Prisma                   |
+| Authentication         | Auth.js v5 (credentials) |
 | Linting and formatting | ESLint + Prettier        |
 | Deployment             | Vercel                   |
 
 ## Getting started
 
+The project uses [pnpm](https://pnpm.io/).
+
 ```bash
 git clone <repository-url>
 cd taskflow
-npm install
-npm run dev
+pnpm install
+```
+
+Create a `.env` file in the project root (it is ignored by Git):
+
+```bash
+DATABASE_URL="postgresql://postgres.<project-ref>:<url-encoded-password>@aws-0-us-east-2.pooler.supabase.com:5432/postgres"
+AUTH_SECRET="<output of: npx auth secret>"
+# Only needed to run `pnpm start` locally; dev mode and Vercel trust the host automatically.
+AUTH_TRUST_HOST=true
+```
+
+Use the Supabase session pooler URL: the direct `db.<project-ref>.supabase.co` host is IPv6-only. Then apply the migrations and start the app:
+
+```bash
+pnpm exec prisma migrate dev
+pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
 
-| Command                | What it does                             |
-| ---------------------- | ---------------------------------------- |
-| `npm run dev`          | Development server                       |
-| `npm run build`        | Production build                         |
-| `npm run lint`         | ESLint                                   |
-| `npm run format`       | Formats the code with Prettier           |
-| `npm run format:check` | Checks formatting without changing files |
+| Command             | What it does                             |
+| ------------------- | ---------------------------------------- |
+| `pnpm dev`          | Development server                       |
+| `pnpm build`        | Production build                         |
+| `pnpm lint`         | ESLint                                   |
+| `pnpm format`       | Formats the code with Prettier           |
+| `pnpm format:check` | Checks formatting without changing files |
 
 ## Graphify (local code graph)
 
@@ -79,7 +99,7 @@ Keep pull requests small and focused on one thing. A pull request that does five
 
 ## Code standards
 
-- **Formatting** is handled by Prettier. The rules live in `.prettierrc` and are shared by the whole team, so nobody argues about style in a review. Run `npm run format` before committing.
+- **Formatting** is handled by Prettier. The rules live in `.prettierrc` and are shared by the whole team, so nobody argues about style in a review. Run `pnpm format` before committing.
 - **Correctness** is handled by ESLint. `eslint-config-prettier` is applied last so the linter does not report formatting issues.
 - Commits follow [Conventional Commits](https://www.conventionalcommits.org/): `feat:`, `fix:`, `docs:`, `chore:`, `refactor:`.
 - TypeScript runs in strict mode and `any` is not allowed. Types are explicit on component props.

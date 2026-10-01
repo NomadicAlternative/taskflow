@@ -5,12 +5,15 @@ import type {
   ProjectWithTaskCount,
 } from '@/lib/types';
 
-// NOTE: Ownership enforcement is intentionally absent from this slice. When
-// Auth.js v5 is wired up, every query here will be scoped to the signed-in
-// user's id.
+// NOTE: `getProjectById` is not scoped to an owner yet; ownership enforcement
+// for single records lands with issue #3. Callers pass the id returned by
+// `lib/session.ts`, never one taken from request input.
 
-export async function getProjects(): Promise<ProjectWithTaskCount[]> {
+export async function getProjects(
+  ownerId: string,
+): Promise<ProjectWithTaskCount[]> {
   const projects = await prisma.project.findMany({
+    where: { ownerId },
     orderBy: { createdAt: 'desc' },
     include: {
       _count: { select: { tasks: true } },
