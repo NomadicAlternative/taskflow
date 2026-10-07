@@ -9,7 +9,7 @@ A web app that helps students and small teams organize their projects and manage
 | Diego Artemio Garcia     | [@NomadicAlternative](https://github.com/NomadicAlternative) |
 | Joshua Abinadi Cirilo    | [@joshuacirilo](https://github.com/joshuacirilo)             |
 | Nelson Mandella Akpomah  | [@mandellasly1](https://github.com/mandellasly1)             |
-| Taiye Gabriel Ade-Benson | _add username_                                               |
+| Taiye Gabriel Ade-Benson | [@adebenson20](https://github.com/adebenson20)                                               |
 
 **Synchronous meeting:** Wednesdays at **22:00 UTC**.
 
