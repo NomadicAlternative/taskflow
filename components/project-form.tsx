@@ -2,6 +2,8 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Field, TextareaField } from '@/components/ui/field';
 
 type EditableProject = {
   id: string;
@@ -59,31 +61,20 @@ export function ProjectForm({ project }: { project?: EditableProject }) {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor="title" className="text-sm font-medium">
-          Title
-        </label>
-        <input
-          id="title"
-          name="title"
-          required
-          defaultValue={project?.title ?? ''}
-          className="rounded-md border border-black/15 px-3 py-2 text-sm outline-none dark:border-white/20 dark:bg-transparent"
-        />
-      </div>
-
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor="description" className="text-sm font-medium">
-          Description
-        </label>
-        <textarea
-          id="description"
-          name="description"
-          rows={3}
-          defaultValue={project?.description ?? ''}
-          className="rounded-md border border-black/15 px-3 py-2 text-sm outline-none dark:border-white/20 dark:bg-transparent"
-        />
-      </div>
+      <Field
+        label="Title"
+        id="title"
+        name="title"
+        required
+        defaultValue={project?.title ?? ''}
+      />
+      <TextareaField
+        label="Description"
+        id="description"
+        name="description"
+        rows={3}
+        defaultValue={project?.description ?? ''}
+      />
 
       {error !== null ? (
         <p role="alert" className="text-sm text-red-600 dark:text-red-400">
@@ -92,20 +83,12 @@ export function ProjectForm({ project }: { project?: EditableProject }) {
       ) : null}
 
       <div className="flex gap-2">
-        <button
-          type="submit"
-          disabled={pending}
-          className="rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background disabled:opacity-60"
-        >
+        <Button type="submit" disabled={pending}>
           {pending ? 'Saving…' : isEdit ? 'Save changes' : 'Create project'}
-        </button>
-        <button
-          type="button"
-          onClick={() => router.back()}
-          className="rounded-md border border-black/15 px-4 py-2 text-sm font-medium dark:border-white/20"
-        >
+        </Button>
+        <Button type="button" variant="secondary" onClick={() => router.back()}>
           Cancel
-        </button>
+        </Button>
       </div>
     </form>
   );

@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { Button } from '@/components/ui/button';
 
 export function DeleteProjectButton({ projectId }: { projectId: string }) {
   const router = useRouter();
@@ -26,13 +27,8 @@ export function DeleteProjectButton({ projectId }: { projectId: string }) {
   }
 
   return (
-    <button
-      type="button"
-      onClick={remove}
-      disabled={pending}
-      className="rounded-md border border-red-300 px-3 py-2 text-sm font-medium text-red-600 transition-colors disabled:opacity-60 dark:border-red-800 dark:text-red-400"
-    >
+    <Button variant="danger" onClick={remove} disabled={pending}>
       {pending ? 'Deleting…' : 'Delete'}
-    </button>
+    </Button>
   );
 }
