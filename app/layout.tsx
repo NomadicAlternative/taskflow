@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
+import { SITE_DESCRIPTION, SITE_NAME } from '@/lib/metadata';
 import './globals.css';
 
 const geistSans = Geist({
@@ -13,8 +14,17 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'TaskFlow',
-  description: 'Organize your projects and tasks in one place.',
+  title: {
+    default: SITE_NAME,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  openGraph: {
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    type: 'website',
+    siteName: SITE_NAME,
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
