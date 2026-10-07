@@ -46,7 +46,15 @@ async function ProjectList({ user }: { user: SessionUser }) {
             Signed in as {user.name ?? user.email}
           </p>
         </div>
-        <SignOutButton />
+        <div className="flex items-center gap-2">
+          <Link
+            href="/projects/new"
+            className="rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background"
+          >
+            New project
+          </Link>
+          <SignOutButton />
+        </div>
       </header>
 
       {projects.length === 0 ? (
@@ -54,21 +62,23 @@ async function ProjectList({ user }: { user: SessionUser }) {
       ) : (
         <ul className="flex flex-col gap-4">
           {projects.map((project) => (
-            <li
-              key={project.id}
-              className="flex items-center justify-between gap-4 rounded-lg border border-solid border-black/[.08] px-4 py-3 dark:border-white/[.145]"
-            >
-              <div className="flex flex-col">
-                <span className="font-medium">{project.title}</span>
-                {project.description ? (
-                  <span className="text-sm text-zinc-600 dark:text-zinc-400">
-                    {project.description}
-                  </span>
-                ) : null}
-              </div>
-              <span className="text-sm text-zinc-500">
-                {project.taskCount} task{project.taskCount === 1 ? '' : 's'}
-              </span>
+            <li key={project.id}>
+              <Link
+                href={`/projects/${project.id}`}
+                className="flex items-center justify-between gap-4 rounded-lg border border-solid border-black/[.08] px-4 py-3 transition-colors hover:bg-black/[.02] dark:border-white/[.145] dark:hover:bg-white/[.02]"
+              >
+                <div className="flex flex-col">
+                  <span className="font-medium">{project.title}</span>
+                  {project.description ? (
+                    <span className="text-sm text-zinc-600 dark:text-zinc-400">
+                      {project.description}
+                    </span>
+                  ) : null}
+                </div>
+                <span className="text-sm text-zinc-500">
+                  {project.taskCount} task{project.taskCount === 1 ? '' : 's'}
+                </span>
+              </Link>
             </li>
           ))}
         </ul>

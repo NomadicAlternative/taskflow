@@ -114,6 +114,24 @@ taskflow/
 └── public/       Static assets
 ```
 
+## API
+
+All routes require a signed-in session and return `401` otherwise.
+Mutations return `400` for invalid input and `404` when the record is missing
+or belongs to another user (owner-scoped).
+
+| Method | Route                    | Description                          |
+| ------ | ------------------------ | ------------------------------------ |
+| GET    | `/api/projects`          | List the signed-in user's projects   |
+| POST   | `/api/projects`          | Create a project                     |
+| GET    | `/api/projects/:id`      | Get one project (owner-scoped)       |
+| PATCH  | `/api/projects/:id`      | Update a project                     |
+| DELETE | `/api/projects/:id`      | Delete a project                     |
+| GET    | `/api/projects/:id/tasks` | List a project's tasks              |
+| POST   | `/api/projects/:id/tasks` | Create a task in a project          |
+| PATCH  | `/api/tasks/:id`         | Update a task (title/description/status) |
+| DELETE | `/api/tasks/:id`         | Delete a task                        |
+
 ## Specification
 
 The project specification lives in [`specs/`](./specs). Read it before starting a feature — it is the source of truth for what we are building and what is out of scope.
@@ -121,3 +139,13 @@ The project specification lives in [`specs/`](./specs). Read it before starting 
 ## Coordination
 
 Beyond the weekly meeting, keep the team posted asynchronously in our Microsoft Teams channel: what you finished, what you are working on next, and anything blocking you.
+
+## Known issues & opportunities
+
+- **Owner-only model**: every project and task belongs to a single user; there
+  is no multi-user sharing or collaboration yet (tracked in issue #3).
+- **No Open Graph image**: there is no committed brand asset yet, so shared
+  links render the title/description without a preview image.
+- **No password reset**: credentials auth has no recovery flow yet.
+- **No loading/error boundaries** on the project detail page for database
+  outages (the API routes handle their own errors, but the page does not).

@@ -3,11 +3,8 @@ import type {
   CreateProjectInput,
   Project,
   ProjectWithTaskCount,
+  UpdateProjectInput,
 } from '@/lib/types';
-
-// NOTE: `getProjectById` is not scoped to an owner yet; ownership enforcement
-// for single records lands with issue #3. Callers pass the id returned by
-// `lib/session.ts`, never one taken from request input.
 
 export async function getProjects(
   ownerId: string,
@@ -30,9 +27,15 @@ export async function getProjects(
   }));
 }
 
-export async function getProjectById(id: string): Promise<Project | null> {
-  const project = await prisma.project.findUnique({
-    where: { id },
+// Owner-scoped: the caller passes the signed-in user id (from lib/session.ts),
+// never one taken from request input, so a user cannot read another user's
+// project by guessing its id.
+export async function getProjectById(
+  id: string,
+  ownerId: string,
+): Promise<Project | null> {
+  const project = await prisma.project.findFirst({
+    where: { id, ownerId },
   });
 
   if (project === null) {
@@ -64,4 +67,39 @@ export async function createProject(input: CreateProjectInput): Promise<Project>
     createdAt: project.createdAt,
     ownerId: project.ownerId,
   };
+}
+
+// Updates only the fields that are present. updateMany + where {id, ownerId}
+// enforces ownership: a mismatched owner updates zero rows and returns null.
+export async function updateProject(
+  id: string,
+  ownerId: string,
+  input: UpdateProjectInput,
+): Promise<Project | null> {
+  const result = await prisma.project.updateMany({
+    where: { id, ownerId },
+    data: {
+      title: input.title ?? undefined,
+      description: input.description ?? undefined,
+    },
+  });
+
+  if (result.count === 0) {
+    return null;
+  }
+
+  return getProjectById(id, ownerId);
+}
+
+// deleteMany + where {id, ownerId} enforces ownership and lets the caller
+// distinguish "deleted" from "not found / not yours" via the boolean.
+export async function deleteProject(
+  id: string,
+  ownerId: string,
+): Promise<boolean> {
+  const result = await prisma.project.deleteMany({
+    where: { id, ownerId },
+  });
+
+  return result.count > 0;
 }

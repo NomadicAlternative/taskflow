@@ -38,3 +38,21 @@ export interface CreateProjectInput {
   description?: string;
   ownerId: string;
 }
+
+export interface UpdateProjectInput {
+  title?: string;
+  description?: string;
+}
+
+export interface CreateTaskInput {
+  title: string;
+  description?: string;
+  projectId: string;
+  ownerId: string;
+}
+
+export interface UpdateTaskInput {
+  title?: string;
+  description?: string;
+  status?: TaskStatus;
+}
