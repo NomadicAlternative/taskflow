@@ -2,6 +2,8 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Field } from '@/components/ui/field';
 
 export function TaskForm({ projectId }: { projectId: string }) {
   const router = useRouter();
@@ -45,24 +47,19 @@ export function TaskForm({ projectId }: { projectId: string }) {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-2">
-      <label htmlFor="task-title" className="text-sm font-medium">
-        New task
-      </label>
-      <div className="flex gap-2">
-        <input
-          id="task-title"
-          name="title"
-          required
-          placeholder="Task title"
-          className="flex-1 rounded-md border border-black/15 px-3 py-2 text-sm outline-none dark:border-white/20 dark:bg-transparent"
-        />
-        <button
-          type="submit"
-          disabled={pending}
-          className="rounded-md bg-foreground px-3 py-2 text-sm font-medium text-background disabled:opacity-60"
-        >
+      <div className="flex items-end gap-2">
+        <div className="flex-1">
+          <Field
+            label="New task"
+            id="task-title"
+            name="title"
+            required
+            placeholder="Task title"
+          />
+        </div>
+        <Button type="submit" disabled={pending}>
           {pending ? 'Adding…' : 'Add'}
-        </button>
+        </Button>
       </div>
       {error !== null ? (
         <p role="alert" className="text-sm text-red-600 dark:text-red-400">

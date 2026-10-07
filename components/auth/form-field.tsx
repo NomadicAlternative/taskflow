@@ -27,7 +27,7 @@ export function FormField({
         required={required}
         minLength={minLength}
         defaultValue={defaultValue}
-        className="rounded-md border border-black/15 bg-transparent px-3 py-2 text-base font-normal outline-none focus-visible:ring-2 focus-visible:ring-foreground dark:border-white/20"
+        className="rounded-md border border-border bg-transparent px-3 py-2 text-base font-normal outline-none transition-colors focus-visible:border-accent"
       />
     </label>
   );
