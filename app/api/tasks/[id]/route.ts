@@ -1,40 +1,16 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { deleteProject, getProject, updateProject } from '@/lib/projects';
+import { deleteTask, updateTask } from '@/lib/tasks';
 import { getCurrentUser } from '@/lib/session';
+import type { TaskStatus } from '@/lib/types';
+
+const TASK_STATUSES: TaskStatus[] = ['TODO', 'IN_PROGRESS', 'COMPLETED'];
 
 function unauthorized() {
   return NextResponse.json({ error: 'Not signed in' }, { status: 401 });
 }
 
-function notFound() {
-  return NextResponse.json({ error: 'Project not found' }, { status: 404 });
-}
-
-export async function GET(
-  _request: NextRequest,
-  context: RouteContext<'/api/projects/[id]'>,
-) {
-  const user = await getCurrentUser();
-  if (user === null) {
-    return NextResponse.json({ error: 'Not signed in' }, { status: 401 });
-  }
-
-  const { id } = await context.params;
-
-  try {
-    const project = await getProject(user.id, id);
-    // Same answer whether the project is missing or owned by someone else.
-    if (project === null) {
-      return NextResponse.json({ error: 'Project not found' }, { status: 404 });
-    }
-    return NextResponse.json(project);
-  } catch (error) {
-    console.error('Failed to fetch project', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch project' },
-      { status: 500 },
-    );
-  }
+function taskNotFound() {
+  return NextResponse.json({ error: 'Task not found' }, { status: 404 });
 }
 
 export async function PATCH(
@@ -65,9 +41,10 @@ export async function PATCH(
     );
   }
 
-  const { title, description } = body as {
+  const { title, description, status } = body as {
     title?: unknown;
     description?: unknown;
+    status?: unknown;
   };
 
   if (
@@ -87,16 +64,28 @@ export async function PATCH(
     );
   }
 
-  const project = await updateProject(user.id, id, {
-    title: typeof title === 'string' ? title.trim() : undefined,
-    description: typeof description === 'string' ? description : undefined,
-  });
-
-  if (project === null) {
-    return notFound();
+  if (
+    status !== undefined &&
+    (typeof status !== 'string' ||
+      !TASK_STATUSES.includes(status as TaskStatus))
+  ) {
+    return NextResponse.json(
+      { error: 'Status must be one of TODO, IN_PROGRESS, COMPLETED' },
+      { status: 400 },
+    );
   }
 
-  return NextResponse.json(project);
+  const task = await updateTask(user.id, id, {
+    title: typeof title === 'string' ? title.trim() : undefined,
+    description: typeof description === 'string' ? description : undefined,
+    status: typeof status === 'string' ? (status as TaskStatus) : undefined,
+  });
+
+  if (task === null) {
+    return taskNotFound();
+  }
+
+  return NextResponse.json(task);
 }
 
 export async function DELETE(
@@ -109,9 +98,9 @@ export async function DELETE(
   }
 
   const { id } = await params;
-  const deleted = await deleteProject(user.id, id);
+  const deleted = await deleteTask(user.id, id);
   if (!deleted) {
-    return notFound();
+    return taskNotFound();
   }
 
   return new NextResponse(null, { status: 204 });

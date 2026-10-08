@@ -1,9 +1,5 @@
 import type { Project as ProjectRow, Task as TaskRow } from '@prisma/client';
-import {
-  isRecordNotFound,
-  ownedProject,
-  ownedProjects,
-} from '@/lib/ownership';
+import { isRecordNotFound, ownedProject, ownedProjects } from '@/lib/ownership';
 import { prisma } from '@/lib/prisma';
 import type {
   CreateProjectInput,
@@ -72,7 +68,9 @@ export async function getProject(
   return { ...toProject(project), tasks: project.tasks.map(toTask) };
 }
 
-export async function createProject(input: CreateProjectInput): Promise<Project> {
+export async function createProject(
+  input: CreateProjectInput,
+): Promise<Project> {
   const project = await prisma.project.create({
     data: {
       title: input.title,
@@ -116,4 +114,11 @@ export async function deleteProject(
     }
     throw error;
   }
+}
+
+export async function getProjectById(
+  id: string,
+  ownerId: string,
+): Promise<Project | null> {
+  return getProject(ownerId, id);
 }

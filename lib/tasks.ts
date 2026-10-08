@@ -93,3 +93,10 @@ export async function deleteTask(
     throw error;
   }
 }
+
+export async function getTasksByProject(
+  projectId: string,
+  ownerId: string,
+): Promise<Task[] | null> {
+  return getTasks(ownerId, projectId);
+}
