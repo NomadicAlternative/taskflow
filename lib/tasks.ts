@@ -1,60 +1,46 @@
+import { isRecordNotFound, ownedProject, ownedTask } from '@/lib/ownership';
 import { prisma } from '@/lib/prisma';
-import type {
-  CreateTaskInput,
-  Task,
-  TaskStatus,
-  UpdateTaskInput,
-} from '@/lib/types';
+import { toTask } from '@/lib/projects';
+import type { CreateTaskInput, Task, UpdateTaskInput } from '@/lib/types';
 
-function mapTask(row: {
-  id: string;
-  title: string;
-  description: string | null;
-  status: string;
-  createdAt: Date;
-  projectId: string;
-}): Task {
-  return {
-    id: row.id,
-    title: row.title,
-    description: row.description,
-    status: row.status as TaskStatus,
-    createdAt: row.createdAt,
-    projectId: row.projectId,
-  };
+// Tasks are owned through their project. As in `lib/projects.ts`, a task or
+// project belonging to another account is reported as missing (null / false).
+
+// Returns null (not an empty list) when the project is not the user's, so the
+// caller refuses the request instead of showing an empty project.
+export async function getTasks(
+  ownerId: string,
+  projectId: string,
+): Promise<Task[] | null> {
+  const project = await prisma.project.findUnique({
+    where: ownedProject(ownerId, projectId),
+    select: { tasks: { orderBy: { createdAt: 'asc' } } },
+  });
+
+  return project === null ? null : project.tasks.map(toTask);
 }
 
-// A task belongs to an owner only through its project, so every operation
-// verifies the project's ownerId before touching the task.
-async function projectOwnedBy(
-  projectId: string,
+export async function getTask(
   ownerId: string,
-): Promise<boolean> {
-  const project = await prisma.project.findFirst({
-    where: { id: projectId, ownerId },
+  taskId: string,
+): Promise<Task | null> {
+  const task = await prisma.task.findUnique({
+    where: ownedTask(ownerId, taskId),
+  });
+
+  return task === null ? null : toTask(task);
+}
+
+export async function createTask(
+  ownerId: string,
+  projectId: string,
+  input: CreateTaskInput,
+): Promise<Task | null> {
+  const project = await prisma.project.findUnique({
+    where: ownedProject(ownerId, projectId),
     select: { id: true },
   });
-  return project !== null;
-}
-
-export async function getTasksByProject(
-  projectId: string,
-  ownerId: string,
-): Promise<Task[] | null> {
-  if (!(await projectOwnedBy(projectId, ownerId))) {
-    return null;
-  }
-
-  const tasks = await prisma.task.findMany({
-    where: { projectId },
-    orderBy: { createdAt: 'asc' },
-  });
-
-  return tasks.map(mapTask);
-}
-
-export async function createTask(input: CreateTaskInput): Promise<Task | null> {
-  if (!(await projectOwnedBy(input.projectId, input.ownerId))) {
+  if (project === null) {
     return null;
   }
 
@@ -62,42 +48,55 @@ export async function createTask(input: CreateTaskInput): Promise<Task | null> {
     data: {
       title: input.title,
       description: input.description ?? null,
-      projectId: input.projectId,
+      status: input.status,
+      projectId: project.id,
     },
   });
 
-  return mapTask(task);
+  return toTask(task);
 }
 
 export async function updateTask(
-  id: string,
   ownerId: string,
+  taskId: string,
   input: UpdateTaskInput,
 ): Promise<Task | null> {
-  const existing = await prisma.task.findFirst({
-    where: { id, project: { ownerId } },
-    select: { id: true },
-  });
-  if (existing === null) {
-    return null;
+  try {
+    const task = await prisma.task.update({
+      where: ownedTask(ownerId, taskId),
+      data: {
+        title: input.title,
+        description: input.description,
+        status: input.status,
+      },
+    });
+    return toTask(task);
+  } catch (error) {
+    if (isRecordNotFound(error)) {
+      return null;
+    }
+    throw error;
   }
-
-  const task = await prisma.task.update({
-    where: { id },
-    data: {
-      title: input.title ?? undefined,
-      description: input.description ?? undefined,
-      status: input.status ?? undefined,
-    },
-  });
-
-  return mapTask(task);
 }
 
-export async function deleteTask(id: string, ownerId: string): Promise<boolean> {
-  const result = await prisma.task.deleteMany({
-    where: { id, project: { ownerId } },
-  });
+export async function deleteTask(
+  ownerId: string,
+  taskId: string,
+): Promise<boolean> {
+  try {
+    await prisma.task.delete({ where: ownedTask(ownerId, taskId) });
+    return true;
+  } catch (error) {
+    if (isRecordNotFound(error)) {
+      return false;
+    }
+    throw error;
+  }
+}
 
-  return result.count > 0;
+export async function getTasksByProject(
+  projectId: string,
+  ownerId: string,
+): Promise<Task[] | null> {
+  return getTasks(ownerId, projectId);
 }

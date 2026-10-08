@@ -1,9 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import {
-  deleteProject,
-  getProjectById,
-  updateProject,
-} from '@/lib/projects';
+import { deleteProject, getProject, updateProject } from '@/lib/projects';
 import { getCurrentUser } from '@/lib/session';
 
 function unauthorized() {
@@ -16,20 +12,29 @@ function notFound() {
 
 export async function GET(
   _request: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
+  context: RouteContext<'/api/projects/[id]'>,
 ) {
   const user = await getCurrentUser();
   if (user === null) {
-    return unauthorized();
+    return NextResponse.json({ error: 'Not signed in' }, { status: 401 });
   }
 
-  const { id } = await params;
-  const project = await getProjectById(id, user.id);
-  if (project === null) {
-    return notFound();
-  }
+  const { id } = await context.params;
 
-  return NextResponse.json(project);
+  try {
+    const project = await getProject(user.id, id);
+    // Same answer whether the project is missing or owned by someone else.
+    if (project === null) {
+      return NextResponse.json({ error: 'Project not found' }, { status: 404 });
+    }
+    return NextResponse.json(project);
+  } catch (error) {
+    console.error('Failed to fetch project', error);
+    return NextResponse.json(
+      { error: 'Failed to fetch project' },
+      { status: 500 },
+    );
+  }
 }
 
 export async function PATCH(
@@ -65,7 +70,10 @@ export async function PATCH(
     description?: unknown;
   };
 
-  if (title !== undefined && (typeof title !== 'string' || title.trim() === '')) {
+  if (
+    title !== undefined &&
+    (typeof title !== 'string' || title.trim() === '')
+  ) {
     return NextResponse.json(
       { error: 'Title must be a non-empty string' },
       { status: 400 },
@@ -79,7 +87,7 @@ export async function PATCH(
     );
   }
 
-  const project = await updateProject(id, user.id, {
+  const project = await updateProject(user.id, id, {
     title: typeof title === 'string' ? title.trim() : undefined,
     description: typeof description === 'string' ? description : undefined,
   });
@@ -101,7 +109,7 @@ export async function DELETE(
   }
 
   const { id } = await params;
-  const deleted = await deleteProject(id, user.id);
+  const deleted = await deleteProject(user.id, id);
   if (!deleted) {
     return notFound();
   }

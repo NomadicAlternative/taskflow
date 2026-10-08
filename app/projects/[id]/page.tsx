@@ -20,7 +20,10 @@ export default async function ProjectPage({
     notFound();
   }
 
-  const tasks = (await getTasksByProject(id, user.id)) ?? [];
+  const tasks = await getTasksByProject(id, user.id);
+  if (tasks === null) {
+    notFound();
+  }
 
   return (
     <main className="mx-auto w-full max-w-xl flex-1 px-6 py-16">
