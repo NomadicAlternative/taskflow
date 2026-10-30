@@ -75,7 +75,7 @@ export async function PATCH(
     );
   }
 
-  const task = await updateTask(id, user.id, {
+  const task = await updateTask(user.id, id, {
     title: typeof title === 'string' ? title.trim() : undefined,
     description: typeof description === 'string' ? description : undefined,
     status: typeof status === 'string' ? (status as TaskStatus) : undefined,
@@ -98,7 +98,7 @@ export async function DELETE(
   }
 
   const { id } = await params;
-  const deleted = await deleteTask(id, user.id);
+  const deleted = await deleteTask(user.id, id);
   if (!deleted) {
     return taskNotFound();
   }
