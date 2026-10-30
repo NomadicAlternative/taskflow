@@ -79,7 +79,11 @@ async function ProjectList({ user }: { user: SessionUser }) {
             </h2>
             <div className="grid gap-3 md:grid-cols-2">
               {projects.map((project) => (
-                <ProjectCard key={project.id} project={project} />
+                <ProjectCard
+                  key={project.id}
+                  project={project}
+                  href={`/projects/${project.id}`}
+                />
               ))}
             </div>
           </section>

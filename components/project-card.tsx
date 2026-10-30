@@ -7,11 +7,11 @@ const STATUS_ORDER: TaskStatus[] = ['TODO', 'IN_PROGRESS', 'COMPLETED'];
 // Full literal class names on purpose: Tailwind only emits classes it can see
 // in the source, so building these strings dynamically would drop the styles.
 const ACCENT_STRIPES = [
-  'border-l-project-1',
-  'border-l-project-2',
-  'border-l-project-3',
-  'border-l-project-4',
-  'border-l-project-5',
+  'bg-project-1',
+  'bg-project-2',
+  'bg-project-3',
+  'bg-project-4',
+  'bg-project-5',
 ];
 
 // Stable per-project accent: the same project always gets the same stripe,
@@ -39,10 +39,15 @@ export function ProjectCard({
   const done = project.counts.COMPLETED;
   const percent = total === 0 ? 0 : Math.round((done / total) * 100);
 
-  const className = `flex flex-col gap-3 rounded-lg border border-l-4 border-border bg-surface px-4 py-3 ${accentStripe(project.id)}`;
+  const className =
+    'relative flex flex-col gap-3 overflow-hidden rounded-lg bg-surface py-3 pr-4 pl-5 ring-1 ring-border';
 
   const content = (
     <>
+      <span
+        aria-hidden="true"
+        className={`absolute inset-y-0 left-0 w-1.5 ${accentStripe(project.id)}`}
+      />
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="truncate font-medium">{project.title}</p>
