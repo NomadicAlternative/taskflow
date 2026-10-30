@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { AuthShell } from '@/components/auth/auth-shell';
 import { SignUpForm } from '@/components/auth/signup-form';
 
 export const metadata: Metadata = {
@@ -8,15 +9,22 @@ export const metadata: Metadata = {
 
 export default function SignUpPage() {
   return (
-    <main className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center gap-6 px-6 py-16">
-      <h1 className="text-2xl font-semibold tracking-tight">Create account</h1>
+    <AuthShell
+      title="Create account"
+      description="Start organizing your projects and tasks in one place."
+      footer={
+        <p className="text-sm text-muted">
+          Already have an account?{' '}
+          <Link
+            href="/login"
+            className="focus-ring rounded-sm font-medium text-primary-text underline underline-offset-4"
+          >
+            Sign in
+          </Link>
+        </p>
+      }
+    >
       <SignUpForm />
-      <p className="text-sm text-zinc-600 dark:text-zinc-400">
-        Already have an account?{' '}
-        <Link href="/login" className="font-medium underline">
-          Sign in
-        </Link>
-      </p>
-    </main>
+    </AuthShell>
   );
 }

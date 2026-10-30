@@ -17,9 +17,11 @@ export default async function EditProjectPage({
   }
 
   return (
-    <main className="mx-auto w-full max-w-xl flex-1 px-6 py-16">
-      <h1 className="text-2xl font-semibold tracking-tight">Edit project</h1>
-      <div className="mt-6 rounded-lg border border-black/[.08] p-6 dark:border-white/[.145]">
+    <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-10">
+      <h1 className="text-heading text-2xl font-semibold tracking-tight">
+        Edit project
+      </h1>
+      <div className="mt-6 rounded-lg border border-border bg-surface p-6">
         <ProjectForm project={project} />
       </div>
     </main>

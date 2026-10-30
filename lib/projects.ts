@@ -7,6 +7,7 @@ import type {
   ProjectWithTaskCount,
   ProjectWithTasks,
   Task,
+  TaskCounts,
   UpdateProjectInput,
 } from '@/lib/types';
 
@@ -46,9 +47,33 @@ export async function getProjects(
     },
   });
 
+  // One grouped query instead of one per project: the dashboard shows progress
+  // per project, and N+1 here would grow with the account.
+  const grouped = await prisma.task.groupBy({
+    by: ['projectId', 'status'],
+    where: { project: ownedProjects(ownerId) },
+    _count: { _all: true },
+  });
+
+  const countsByProject = new Map<string, TaskCounts>();
+  for (const row of grouped) {
+    const counts = countsByProject.get(row.projectId) ?? {
+      TODO: 0,
+      IN_PROGRESS: 0,
+      COMPLETED: 0,
+    };
+    counts[row.status] = row._count._all;
+    countsByProject.set(row.projectId, counts);
+  }
+
   return projects.map((project) => ({
     ...toProject(project),
     taskCount: project._count.tasks,
+    counts: countsByProject.get(project.id) ?? {
+      TODO: 0,
+      IN_PROGRESS: 0,
+      COMPLETED: 0,
+    },
   }));
 }
 
