@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Landing } from '@/components/landing/landing';
 import { SignOutButton } from '@/components/auth/sign-out-button';
 import { ProjectCard } from '@/components/project-card';
 import { EmptyState } from '@/components/ui/empty-state';
@@ -10,36 +11,6 @@ export default async function Home() {
   const user = await getCurrentUser();
 
   return user === null ? <Landing /> : <ProjectList user={user} />;
-}
-
-function Landing() {
-  return (
-    <main className="relative flex flex-1 flex-col items-center justify-center gap-6 px-6 py-16 text-center">
-      <div className="absolute top-6 right-6">
-        <ThemeToggle />
-      </div>
-      <h1 className="text-heading text-4xl font-semibold tracking-tight">
-        TaskFlow
-      </h1>
-      <p className="max-w-md text-muted">
-        Organize your projects and tasks in one place.
-      </p>
-      <div className="flex flex-wrap justify-center gap-3">
-        <Link
-          href="/signup"
-          className="focus-ring rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground transition-colors hover:bg-primary-hover"
-        >
-          Create account
-        </Link>
-        <Link
-          href="/login"
-          className="focus-ring rounded-md border border-border-strong px-4 py-2 font-medium transition-colors hover:bg-surface"
-        >
-          Sign in
-        </Link>
-      </div>
-    </main>
-  );
 }
 
 async function ProjectList({ user }: { user: SessionUser }) {

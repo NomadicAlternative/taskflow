@@ -26,16 +26,23 @@ function accentStripe(id: string) {
 
 // One card carries the whole project at a glance: identity, progress and the
 // per-status breakdown, so the dashboard is informative before opening anything.
-export function ProjectCard({ project }: { project: ProjectWithTaskCount }) {
+// `href` is optional so the landing preview can reuse the exact same markup as a
+// static, non-navigable card and stay in sync with the real dashboard.
+export function ProjectCard({
+  project,
+  href,
+}: {
+  project: ProjectWithTaskCount;
+  href?: string;
+}) {
   const total = project.taskCount;
   const done = project.counts.COMPLETED;
   const percent = total === 0 ? 0 : Math.round((done / total) * 100);
 
-  return (
-    <Link
-      href={`/projects/${project.id}`}
-      className={`focus-ring flex flex-col gap-3 rounded-lg border border-l-4 border-border bg-surface px-4 py-3 transition-colors hover:border-border-strong ${accentStripe(project.id)}`}
-    >
+  const className = `flex flex-col gap-3 rounded-lg border border-l-4 border-border bg-surface px-4 py-3 ${accentStripe(project.id)}`;
+
+  const content = (
+    <>
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="truncate font-medium">{project.title}</p>
@@ -78,6 +85,19 @@ export function ProjectCard({ project }: { project: ProjectWithTaskCount }) {
           </li>
         ))}
       </ul>
-    </Link>
+    </>
   );
+
+  if (href) {
+    return (
+      <Link
+        href={href}
+        className={`focus-ring transition-colors hover:border-border-strong ${className}`}
+      >
+        {content}
+      </Link>
+    );
+  }
+
+  return <div className={className}>{content}</div>;
 }
