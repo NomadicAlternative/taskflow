@@ -26,7 +26,7 @@ export default async function ProjectPage({
   }
 
   return (
-    <main className="mx-auto w-full max-w-xl flex-1 px-6 py-16">
+    <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-10">
       <header className="flex items-start justify-between gap-4">
         <div className="min-w-0">
           <h1 className="text-heading text-2xl font-semibold tracking-tight">

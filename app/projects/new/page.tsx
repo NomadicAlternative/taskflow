@@ -10,7 +10,7 @@ export default async function NewProjectPage() {
   await requireUser();
 
   return (
-    <main className="mx-auto w-full max-w-xl flex-1 px-6 py-16">
+    <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-10">
       <h1 className="text-heading text-2xl font-semibold tracking-tight">
         New project
       </h1>
