@@ -72,6 +72,8 @@ const REQUIRED = [
   ['warning', 'background', AA_TEXT],
   ['warning', 'warning-surface', AA_TEXT],
   ['primary-text', 'primary-surface', AA_TEXT],
+  ['progress', 'progress-surface', AA_TEXT],
+  ['progress', 'background', AA_TEXT],
   // Boundaries and focus indicators only need the non-text threshold.
   ['border-strong', 'background', AA_NON_TEXT],
   ['border-strong', 'surface', AA_NON_TEXT],

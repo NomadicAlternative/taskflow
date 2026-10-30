@@ -42,6 +42,12 @@
   /* Filled chip backgrounds. Tints of the palette, not new hues. */
   --primary-surface: light-dark(#e6f0f4, #003447);
 
+  /* The single warm accent. Reserved for "active / in progress" so the status
+     order reads as grey → amber → green. Deliberately NOT `warning`: if real
+     due-date warnings ever land, that hue must stay free. */
+  --progress: light-dark(#b54708, #fdb022);
+  --progress-surface: light-dark(#f8ede6, #333620);
+
   /* Per-project identity, drawn from the palette ramp so a list reads as a set
      of distinct items without introducing a single new hue. */
   --project-1: light-dark(#003459, #00a8e8);
@@ -89,6 +95,8 @@
   --color-warning: var(--warning);
   --color-warning-surface: var(--warning-surface);
   --color-primary-surface: var(--primary-surface);
+  --color-progress: var(--progress);
+  --color-progress-surface: var(--progress-surface);
 
   --color-project-1: var(--project-1);
   --color-project-2: var(--project-2);
