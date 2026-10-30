@@ -39,10 +39,6 @@ async function ProjectList({ user }: { user: SessionUser }) {
       </SiteHeader>
 
       <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 px-6 py-8">
-        <p className="text-sm text-muted">
-          Signed in as {user.name ?? user.email}
-        </p>
-
         {projects.length === 0 ? (
           <EmptyState
             title="No projects yet"
@@ -76,9 +72,14 @@ async function ProjectList({ user }: { user: SessionUser }) {
             </section>
 
             <section aria-label="Projects" className="flex flex-col gap-3">
-              <h2 className="text-sm font-medium tracking-wide text-muted uppercase">
-                Projects
-              </h2>
+              <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+                <h2 className="text-sm font-medium tracking-wide text-muted uppercase">
+                  Projects
+                </h2>
+                <p className="text-sm text-muted">
+                  Signed in as {user.name ?? user.email}
+                </p>
+              </div>
               <div className="grid gap-3 md:grid-cols-2">
                 {projects.map((project, index) => (
                   <div
