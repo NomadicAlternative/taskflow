@@ -29,19 +29,17 @@ export default async function ProjectPage({
     <main className="mx-auto w-full max-w-xl flex-1 px-6 py-16">
       <header className="flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <h1 className="text-2xl font-semibold tracking-tight">
+          <h1 className="text-heading text-2xl font-semibold tracking-tight">
             {project.title}
           </h1>
           {project.description ? (
-            <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-              {project.description}
-            </p>
+            <p className="mt-1 text-sm text-muted">{project.description}</p>
           ) : null}
         </div>
         <div className="flex shrink-0 items-center gap-2">
           <Link
             href={`/projects/${project.id}/edit`}
-            className="rounded-md border border-black/15 px-3 py-2 text-sm font-medium dark:border-white/20"
+            className="focus-ring rounded-md border border-border-strong px-3 py-2 text-sm font-medium transition-colors hover:bg-surface"
           >
             Edit
           </Link>
@@ -57,7 +55,7 @@ export default async function ProjectPage({
 
       <Link
         href="/"
-        className="mt-8 inline-block text-sm text-zinc-600 underline-offset-4 hover:underline dark:text-zinc-400"
+        className="focus-ring mt-8 inline-block text-sm text-muted underline-offset-4 hover:text-primary-text hover:underline"
       >
         ← Back to projects
       </Link>

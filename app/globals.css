@@ -1,38 +1,114 @@
 @import 'tailwindcss';
 
-/* Design tokens. Tailwind 4 exposes these as utilities via @theme:
-   --color-accent -> bg-accent, --color-muted -> text-muted, etc. */
+/* Design tokens — semantic roles, not raw colors.
+   Palette: #FFFFFF #00171F #003459 #007EA7 #00A8E8
+   Every value below is checked by scripts/check-contrast.mjs (pnpm check:contrast),
+   so changing one without re-checking will fail the build step.
+
+   Roles exist because the palette is a single blue ramp: the cyan accent only
+   reaches AA contrast on dark backgrounds, and #007EA7 as text on a surface
+   fails. Text roles and fill roles are therefore separate tokens. */
 :root {
+  color-scheme: light;
+
   --background: #ffffff;
-  --foreground: #171717;
-  --card: #ffffff;
-  --border: #e4e4e7;
-  --muted: #52525b;
-  --accent: #2563eb;
-  --accent-foreground: #ffffff;
+  --surface: #f0f3f5;
+  --surface-raised: #ffffff;
+
+  --foreground: #00171f;
+  --heading: #003459;
+  --muted: #4a6b7c;
+
+  --border: #e0e7eb;
+  --border-strong: #6e8a9b;
+
+  --primary: #007ea7;
+  --primary-foreground: #ffffff;
+  --primary-hover: #003459;
+  --primary-text: #006b8f;
+
+  --accent: #00a8e8;
+  --accent-foreground: #00171f;
+  --focus: #006b8f;
+
+  --danger: #b42318;
+  --danger-surface: #fdecea;
+  --success: #067647;
+  --warning: #b54708;
+}
+
+/* Dark mode is the primary presentation: the cyan accent is only legible here
+   (#00A8E8 on #00171F = 6.80:1). Components never use `dark:` variants —
+   they use roles, so this block is the single place that defines the mode. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+
+    --background: #00171f;
+    --surface: #003459;
+    --surface-raised: #00456e;
+
+    --foreground: #ffffff;
+    --heading: #ffffff;
+    --muted: #a8c4d4;
+
+    --border: #004a65;
+    --border-strong: #1b93be;
+
+    --primary: #00a8e8;
+    --primary-foreground: #00171f;
+    --primary-hover: #33bdf0;
+    --primary-text: #00a8e8;
+
+    --accent: #00a8e8;
+    --accent-foreground: #00171f;
+    --focus: #00a8e8;
+
+    --danger: #f97066;
+    --danger-surface: #3a1a18;
+    --success: #47cd89;
+    --warning: #fdb022;
+  }
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+
   --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-border: var(--border);
+  --color-heading: var(--heading);
   --color-muted: var(--muted);
+
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-text: var(--primary-text);
+
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-focus: var(--focus);
+
+  --color-danger: var(--danger);
+  --color-danger-surface: var(--danger-surface);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-    --card: #171717;
-    --border: #27272a;
-    --muted: #a1a1aa;
-    --accent: #3b82f6;
-    --accent-foreground: #ffffff;
+/* One focus style for every interactive element (buttons, fields, links,
+   selects). Components opt in with `focus-ring` instead of inventing rings. */
+@utility focus-ring {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+
+  &:focus-visible {
+    outline-color: var(--focus);
   }
 }
 

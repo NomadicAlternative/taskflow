@@ -27,11 +27,7 @@ export function TaskList({ tasks }: { tasks: Task[] }) {
   }
 
   if (tasks.length === 0) {
-    return (
-      <p className="text-sm text-zinc-600 dark:text-zinc-400">
-        No tasks yet — add one above.
-      </p>
-    );
+    return <p className="text-sm text-muted">No tasks yet — add one above.</p>;
   }
 
   return (
@@ -39,22 +35,20 @@ export function TaskList({ tasks }: { tasks: Task[] }) {
       {tasks.map((task) => (
         <li
           key={task.id}
-          className="flex items-center justify-between gap-3 rounded-md border border-black/[.08] px-3 py-2 dark:border-white/[.145]"
+          className="flex items-center justify-between gap-3 rounded-md border border-border bg-surface px-3 py-2"
         >
           <div className="flex min-w-0 flex-col">
             <span
               className={
                 task.status === 'COMPLETED'
-                  ? 'text-zinc-500 line-through'
+                  ? 'text-muted line-through'
                   : 'font-medium'
               }
             >
               {task.title}
             </span>
             {task.description ? (
-              <span className="text-sm text-zinc-600 dark:text-zinc-400">
-                {task.description}
-              </span>
+              <span className="text-sm text-muted">{task.description}</span>
             ) : null}
           </div>
 
@@ -65,7 +59,7 @@ export function TaskList({ tasks }: { tasks: Task[] }) {
               onChange={(event) =>
                 changeStatus(task.id, event.target.value as TaskStatus)
               }
-              className="rounded-md border border-black/15 bg-transparent px-2 py-1 text-sm dark:border-white/20"
+              className="focus-ring rounded-md border border-border-strong bg-background px-2 py-1 text-sm"
             >
               {STATUSES.map((status) => (
                 <option key={status} value={status}>
@@ -76,7 +70,7 @@ export function TaskList({ tasks }: { tasks: Task[] }) {
             <button
               type="button"
               onClick={() => remove(task.id)}
-              className="text-sm text-zinc-500 transition-colors hover:text-red-600 dark:hover:text-red-400"
+              className="focus-ring rounded-sm text-sm text-muted transition-colors hover:text-danger"
             >
               Delete
             </button>

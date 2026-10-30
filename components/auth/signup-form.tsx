@@ -31,7 +31,7 @@ export function SignUpForm() {
       />
 
       {state.error ? (
-        <p role="alert" className="text-sm text-red-600 dark:text-red-400">
+        <p role="alert" className="text-sm text-danger">
           {state.error}
         </p>
       ) : null}
@@ -39,7 +39,7 @@ export function SignUpForm() {
       <button
         type="submit"
         disabled={isPending}
-        className="rounded-md bg-foreground px-4 py-2 font-medium text-background outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 disabled:opacity-60"
+        className="focus-ring rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground transition-colors hover:bg-primary-hover disabled:opacity-60"
       >
         {isPending ? 'Creating account…' : 'Create account'}
       </button>

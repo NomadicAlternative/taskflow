@@ -12,20 +12,22 @@ export default async function Home() {
 function Landing() {
   return (
     <main className="flex flex-1 flex-col items-center justify-center gap-6 px-6 py-16 text-center">
-      <h1 className="text-4xl font-semibold tracking-tight">TaskFlow</h1>
-      <p className="max-w-md text-zinc-600 dark:text-zinc-400">
+      <h1 className="text-heading text-4xl font-semibold tracking-tight">
+        TaskFlow
+      </h1>
+      <p className="max-w-md text-muted">
         Organize your projects and tasks in one place.
       </p>
       <div className="flex flex-wrap justify-center gap-3">
         <Link
           href="/signup"
-          className="rounded-md bg-foreground px-4 py-2 font-medium text-background outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2"
+          className="focus-ring rounded-md bg-primary px-4 py-2 font-medium text-primary-foreground transition-colors hover:bg-primary-hover"
         >
           Create account
         </Link>
         <Link
           href="/login"
-          className="rounded-md border border-black/15 px-4 py-2 font-medium outline-none focus-visible:ring-2 focus-visible:ring-foreground dark:border-white/20"
+          className="focus-ring rounded-md border border-border-strong px-4 py-2 font-medium transition-colors hover:bg-surface"
         >
           Sign in
         </Link>
@@ -41,15 +43,17 @@ async function ProjectList({ user }: { user: SessionUser }) {
     <main className="mx-auto flex w-full max-w-xl flex-1 flex-col gap-8 px-6 py-16">
       <header className="flex items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight">TaskFlow</h1>
-          <p className="text-sm text-zinc-600 dark:text-zinc-400">
+          <h1 className="text-heading text-3xl font-semibold tracking-tight">
+            TaskFlow
+          </h1>
+          <p className="text-sm text-muted">
             Signed in as {user.name ?? user.email}
           </p>
         </div>
         <div className="flex items-center gap-2">
           <Link
             href="/projects/new"
-            className="rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background"
+            className="focus-ring rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover"
           >
             New project
           </Link>
@@ -58,24 +62,24 @@ async function ProjectList({ user }: { user: SessionUser }) {
       </header>
 
       {projects.length === 0 ? (
-        <p className="text-zinc-600 dark:text-zinc-400">No projects yet.</p>
+        <p className="text-muted">No projects yet.</p>
       ) : (
         <ul className="flex flex-col gap-4">
           {projects.map((project) => (
             <li key={project.id}>
               <Link
                 href={`/projects/${project.id}`}
-                className="flex items-center justify-between gap-4 rounded-lg border border-solid border-black/[.08] px-4 py-3 transition-colors hover:bg-black/[.02] dark:border-white/[.145] dark:hover:bg-white/[.02]"
+                className="focus-ring flex items-center justify-between gap-4 rounded-lg border border-border bg-surface px-4 py-3 transition-colors hover:border-border-strong"
               >
                 <div className="flex flex-col">
                   <span className="font-medium">{project.title}</span>
                   {project.description ? (
-                    <span className="text-sm text-zinc-600 dark:text-zinc-400">
+                    <span className="text-sm text-muted">
                       {project.description}
                     </span>
                   ) : null}
                 </div>
-                <span className="text-sm text-zinc-500">
+                <span className="text-sm text-muted">
                   {project.taskCount} task{project.taskCount === 1 ? '' : 's'}
                 </span>
               </Link>
