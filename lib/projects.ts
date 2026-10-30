@@ -51,7 +51,9 @@ export async function getProjectById(
   };
 }
 
-export async function createProject(input: CreateProjectInput): Promise<Project> {
+export async function createProject(
+  input: CreateProjectInput,
+): Promise<Project> {
   const project = await prisma.project.create({
     data: {
       title: input.title,

@@ -94,7 +94,10 @@ export async function updateTask(
   return mapTask(task);
 }
 
-export async function deleteTask(id: string, ownerId: string): Promise<boolean> {
+export async function deleteTask(
+  id: string,
+  ownerId: string,
+): Promise<boolean> {
   const result = await prisma.task.deleteMany({
     where: { id, project: { ownerId } },
   });

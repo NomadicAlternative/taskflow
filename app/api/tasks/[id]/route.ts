@@ -47,7 +47,10 @@ export async function PATCH(
     status?: unknown;
   };
 
-  if (title !== undefined && (typeof title !== 'string' || title.trim() === '')) {
+  if (
+    title !== undefined &&
+    (typeof title !== 'string' || title.trim() === '')
+  ) {
     return NextResponse.json(
       { error: 'Title must be a non-empty string' },
       { status: 400 },

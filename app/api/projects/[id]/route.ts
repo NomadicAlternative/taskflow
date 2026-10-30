@@ -1,9 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import {
-  deleteProject,
-  getProjectById,
-  updateProject,
-} from '@/lib/projects';
+import { deleteProject, getProjectById, updateProject } from '@/lib/projects';
 import { getCurrentUser } from '@/lib/session';
 
 function unauthorized() {
@@ -65,7 +61,10 @@ export async function PATCH(
     description?: unknown;
   };
 
-  if (title !== undefined && (typeof title !== 'string' || title.trim() === '')) {
+  if (
+    title !== undefined &&
+    (typeof title !== 'string' || title.trim() === '')
+  ) {
     return NextResponse.json(
       { error: 'Title must be a non-empty string' },
       { status: 400 },

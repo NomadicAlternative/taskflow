@@ -4,3 +4,8 @@ pnpm-lock.yaml
 .graphify-venv
 graphify-out
 .agents/skills/graphify
+
+# Vendored Spec-Kit tooling: leave upstream formatting untouched so that
+# regenerating or upgrading these files does not produce conflicts.
+.opencode
+.specify

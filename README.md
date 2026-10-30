@@ -9,7 +9,7 @@ A web app that helps students and small teams organize their projects and manage
 | Diego Artemio Garcia     | [@NomadicAlternative](https://github.com/NomadicAlternative) |
 | Joshua Abinadi Cirilo    | [@joshuacirilo](https://github.com/joshuacirilo)             |
 | Nelson Mandella Akpomah  | [@mandellasly1](https://github.com/mandellasly1)             |
-| Taiye Gabriel Ade-Benson | [@adebenson20](https://github.com/adebenson20)                                               |
+| Taiye Gabriel Ade-Benson | [@adebenson20](https://github.com/adebenson20)               |
 
 **Synchronous meeting:** Wednesdays at **22:00 UTC**.
 
@@ -120,17 +120,17 @@ All routes require a signed-in session and return `401` otherwise.
 Mutations return `400` for invalid input and `404` when the record is missing
 or belongs to another user (owner-scoped).
 
-| Method | Route                    | Description                          |
-| ------ | ------------------------ | ------------------------------------ |
-| GET    | `/api/projects`          | List the signed-in user's projects   |
-| POST   | `/api/projects`          | Create a project                     |
-| GET    | `/api/projects/:id`      | Get one project (owner-scoped)       |
-| PATCH  | `/api/projects/:id`      | Update a project                     |
-| DELETE | `/api/projects/:id`      | Delete a project                     |
-| GET    | `/api/projects/:id/tasks` | List a project's tasks              |
-| POST   | `/api/projects/:id/tasks` | Create a task in a project          |
-| PATCH  | `/api/tasks/:id`         | Update a task (title/description/status) |
-| DELETE | `/api/tasks/:id`         | Delete a task                        |
+| Method | Route                     | Description                              |
+| ------ | ------------------------- | ---------------------------------------- |
+| GET    | `/api/projects`           | List the signed-in user's projects       |
+| POST   | `/api/projects`           | Create a project                         |
+| GET    | `/api/projects/:id`       | Get one project (owner-scoped)           |
+| PATCH  | `/api/projects/:id`       | Update a project                         |
+| DELETE | `/api/projects/:id`       | Delete a project                         |
+| GET    | `/api/projects/:id/tasks` | List a project's tasks                   |
+| POST   | `/api/projects/:id/tasks` | Create a task in a project               |
+| PATCH  | `/api/tasks/:id`          | Update a task (title/description/status) |
+| DELETE | `/api/tasks/:id`          | Delete a task                            |
 
 ## Specification
 
