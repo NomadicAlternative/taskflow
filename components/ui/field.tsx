@@ -1,7 +1,4 @@
-import type {
-  InputHTMLAttributes,
-  TextareaHTMLAttributes,
-} from 'react';
+import type { InputHTMLAttributes, TextareaHTMLAttributes } from 'react';
 
 const FIELD_CLASSES =
   'rounded-md border border-border bg-transparent px-3 py-2 text-sm outline-none transition-colors focus-visible:border-accent';
@@ -10,8 +7,7 @@ interface FieldProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
 }
 
-interface TextareaFieldProps
-  extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+interface TextareaFieldProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   label: string;
 }
 
