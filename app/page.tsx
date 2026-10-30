@@ -68,12 +68,12 @@ async function ProjectList({ user }: { user: SessionUser }) {
                 value={String(projects.length)}
                 delay={0}
               />
-              <Stat label="Tasks" value={String(totals.tasks)} delay={60} />
-              <Stat label="Completed" value={String(totals.done)} delay={120} />
+              <Stat label="Tasks" value={String(totals.tasks)} delay={110} />
+              <Stat label="Completed" value={String(totals.done)} delay={220} />
               <Stat
                 label="Overall progress"
                 value={`${overall}%`}
-                delay={180}
+                delay={330}
               />
             </section>
 
@@ -82,12 +82,17 @@ async function ProjectList({ user }: { user: SessionUser }) {
                 Projects
               </h2>
               <div className="grid gap-3 md:grid-cols-2">
-                {projects.map((project) => (
-                  <ProjectCard
+                {projects.map((project, index) => (
+                  <div
                     key={project.id}
-                    project={project}
-                    href={`/projects/${project.id}`}
-                  />
+                    className="rise"
+                    style={{ animationDelay: `${380 + index * 130}ms` }}
+                  >
+                    <ProjectCard
+                      project={project}
+                      href={`/projects/${project.id}`}
+                    />
+                  </div>
                 ))}
               </div>
             </section>

@@ -63,7 +63,7 @@ export function Landing() {
         <section
           aria-label="Product preview"
           className="rise"
-          style={{ animationDelay: '120ms' }}
+          style={{ animationDelay: '220ms' }}
         >
           <ProductPreview />
         </section>
@@ -75,6 +75,7 @@ export function Landing() {
           <h2
             id="capabilities-heading"
             className="text-heading rise text-2xl font-semibold tracking-tight"
+            style={{ animationDelay: '300ms' }}
           >
             What it actually does
           </h2>
@@ -83,7 +84,7 @@ export function Landing() {
               <div
                 key={capability.title}
                 className="rise flex flex-col gap-2"
-                style={{ animationDelay: `${180 + index * 90}ms` }}
+                style={{ animationDelay: `${340 + index * 160}ms` }}
               >
                 <p className="text-xs font-medium tabular-nums text-primary-text">
                   {String(index + 1).padStart(2, '0')}
@@ -98,7 +99,7 @@ export function Landing() {
         <section
           aria-labelledby="demo-heading"
           className="rise flex flex-col gap-4 rounded-xl border border-border bg-surface p-6 sm:flex-row sm:items-center sm:justify-between"
-          style={{ animationDelay: '420ms' }}
+          style={{ animationDelay: '860ms' }}
         >
           <div className="flex flex-col gap-1">
             <h2
