@@ -4,7 +4,6 @@ import { SignOutButton } from '@/components/auth/sign-out-button';
 import { SiteHeader } from '@/components/layout/site-header';
 import { ProjectCard } from '@/components/project-card';
 import { EmptyState } from '@/components/ui/empty-state';
-import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { getProjects } from '@/lib/projects';
 import { getCurrentUser, type SessionUser } from '@/lib/session';
 
@@ -30,7 +29,6 @@ async function ProjectList({ user }: { user: SessionUser }) {
   return (
     <>
       <SiteHeader>
-        <ThemeToggle />
         <Link
           href="/projects/new"
           className="focus-ring rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover"

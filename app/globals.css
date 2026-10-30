@@ -3,68 +3,55 @@
 /* Design tokens — semantic roles, not raw colors.
    Palette: #FFFFFF #00171F #003459 #007EA7 #00A8E8
 
-   `light-dark(light, dark)` keeps a single source of truth: there is no
-   duplicated dark block that can drift. The active mode comes from
-   `color-scheme`, which follows the OS until `data-theme` overrides it.
-
-   Every value is checked by scripts/check-contrast.mjs (pnpm check:contrast),
-   so changing one without re-checking fails the build step. */
+   Single light theme by design: the app ships one appearance, so there is no
+   duplicated dark block and no mode-switching code to keep in sync.
+   Every value is checked by scripts/check-contrast.mjs (pnpm check:contrast). */
 :root {
-  color-scheme: light dark;
-
-  --background: light-dark(#ffffff, #00171f);
-  --surface: light-dark(#f0f3f5, #003459);
-  --surface-raised: light-dark(#ffffff, #00456e);
-
-  --foreground: light-dark(#00171f, #ffffff);
-  --heading: light-dark(#003459, #ffffff);
-  --muted: light-dark(#4a6b7c, #a8c4d4);
-
-  --border: light-dark(#e0e7eb, #004a65);
-  --border-strong: light-dark(#6e8a9b, #1b93be);
-
-  --primary: light-dark(#007ea7, #00a8e8);
-  --primary-foreground: light-dark(#ffffff, #00171f);
-  --primary-hover: light-dark(#003459, #33bdf0);
-  --primary-text: light-dark(#006b8f, #00a8e8);
-
-  --accent: light-dark(#00a8e8, #00a8e8);
-  --accent-foreground: light-dark(#00171f, #00171f);
-  --focus: light-dark(#006b8f, #00a8e8);
-
-  --danger: light-dark(#b42318, #f97066);
-  --danger-surface: light-dark(#fdecea, #3a1a18);
-  --success: light-dark(#067647, #47cd89);
-  --success-surface: light-dark(#e6f1ed, #0e3b34);
-  --warning: light-dark(#b54708, #fdb022);
-  --warning-surface: light-dark(#f8ede6, #333620);
-
-  /* Filled chip backgrounds. Tints of the palette, not new hues. */
-  --primary-surface: light-dark(#e6f0f4, #003447);
-
-  /* The single warm accent. Reserved for "active / in progress" so the status
-     order reads as grey → amber → green. Deliberately NOT `warning`: if real
-     due-date warnings ever land, that hue must stay free. */
-  --progress: light-dark(#b54708, #fdb022);
-  --progress-surface: light-dark(#f8ede6, #333620);
-
-  /* Per-project identity, drawn from the palette ramp so a list reads as a set
-     of distinct items without introducing a single new hue. */
-  --project-1: light-dark(#003459, #00a8e8);
-  --project-2: light-dark(#006b8f, #1b93be);
-  --project-3: light-dark(#007ea7, #33bdf0);
-  --project-4: light-dark(#00a8e8, #7fd4f5);
-  --project-5: light-dark(#6e8a9b, #a8c4d4);
-}
-
-/* Explicit choices win over the OS preference. `color-scheme` is what makes
-   `light-dark()` resolve, so both declarations stay in one place. */
-:root[data-theme='light'] {
   color-scheme: light;
-}
 
-:root[data-theme='dark'] {
-  color-scheme: dark;
+  --background: #ffffff;
+  --surface: #f0f3f5;
+  --surface-raised: #ffffff;
+
+  --foreground: #00171f;
+  --heading: #003459;
+  --muted: #4a6b7c;
+
+  --border: #e0e7eb;
+  --border-strong: #6e8a9b;
+
+  --primary: #007ea7;
+  --primary-foreground: #ffffff;
+  --primary-hover: #003459;
+  --primary-text: #006b8f;
+
+  --accent: #00a8e8;
+  --accent-foreground: #00171f;
+  --focus: #006b8f;
+
+  --danger: #b42318;
+  --danger-surface: #fdecea;
+  --success: #067647;
+  --success-surface: #e6f1ed;
+  --warning: #b54708;
+  --warning-surface: #f8ede6;
+  --primary-surface: #e6f0f4;
+
+  /* The single warm accent, reserved for "active / in progress". */
+  --progress: #b54708;
+  --progress-surface: #f8ede6;
+
+  /* Per-project accents drawn from the palette ramp. */
+  --project-1: #003459;
+  --project-2: #006b8f;
+  --project-3: #007ea7;
+  --project-4: #00a8e8;
+  --project-5: #6e8a9b;
+
+  /* Wordmark gradient. A logotype is exempt from WCAG contrast, and the light
+     end sits at 2.70:1, so it is used at 20px semibold to stay legible. */
+  --brand-from: #003459;
+  --brand-to: #00a8e8;
 }
 
 @theme inline {
@@ -83,6 +70,7 @@
   --color-primary-foreground: var(--primary-foreground);
   --color-primary-hover: var(--primary-hover);
   --color-primary-text: var(--primary-text);
+  --color-primary-surface: var(--primary-surface);
 
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
@@ -94,7 +82,7 @@
   --color-success-surface: var(--success-surface);
   --color-warning: var(--warning);
   --color-warning-surface: var(--warning-surface);
-  --color-primary-surface: var(--primary-surface);
+
   --color-progress: var(--progress);
   --color-progress-surface: var(--progress-surface);
 
@@ -103,6 +91,9 @@
   --color-project-3: var(--project-3);
   --color-project-4: var(--project-4);
   --color-project-5: var(--project-5);
+
+  --color-brand-from: var(--brand-from);
+  --color-brand-to: var(--brand-to);
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -117,13 +108,6 @@
   &:focus-visible {
     outline-color: var(--focus);
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  /* The variable is defined by next/font in the root layout. */
-  font-family: var(--font-sans), system-ui, sans-serif;
 }
 
 /* Cascade entrance: elements rise into place with a small stagger. The delay is
@@ -147,4 +131,11 @@ body {
   .rise {
     animation: none;
   }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  /* The variable is defined by next/font in the root layout. */
+  font-family: var(--font-sans), system-ui, sans-serif;
 }

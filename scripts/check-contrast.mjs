@@ -2,8 +2,10 @@
 // WCAG threshold against the backgrounds it is actually used on.
 //
 // Reads the tokens straight out of app/globals.css, so the palette is never
-// duplicated here and a token edit cannot silently skip the check. Tokens use
-// `light-dark(light, dark)`, so both modes come from a single declaration.
+// duplicated here and a token edit cannot silently skip the check. The app
+// ships a single light theme, so each pair is asserted once.
+//
+// The wordmark gradient is intentionally not checked: WCAG exempts logotypes.
 //
 // Run with: pnpm check:contrast
 import { readFileSync } from 'node:fs';
@@ -14,20 +16,14 @@ const css = readFileSync(CSS_PATH, 'utf8');
 const AA_TEXT = 4.5;
 const AA_NON_TEXT = 3;
 
-const TOKEN_PATTERN =
-  /--([a-z-]+):\s*light-dark\(\s*(#[0-9a-fA-F]{6})\s*,\s*(#[0-9a-fA-F]{6})\s*\)/g;
-
-const light = {};
-const dark = {};
-
-for (const match of css.matchAll(TOKEN_PATTERN)) {
-  light[match[1]] = match[2].toUpperCase();
-  dark[match[1]] = match[3].toUpperCase();
+const tokens = {};
+for (const match of css.matchAll(/--([a-z-]+):\s*(#[0-9a-fA-F]{6})\s*;/g)) {
+  tokens[match[1]] = match[2].toUpperCase();
 }
 
-if (Object.keys(light).length === 0) {
+if (Object.keys(tokens).length === 0) {
   throw new Error(
-    'No `light-dark(...)` tokens found in globals.css — the contrast guard would silently pass.',
+    'No color tokens found in globals.css — the contrast guard would silently pass.',
   );
 }
 
@@ -59,9 +55,10 @@ const REQUIRED = [
   ['heading', 'surface', AA_TEXT],
   ['muted', 'background', AA_TEXT],
   ['muted', 'surface', AA_TEXT],
-  // Link and primary-text role: must work on both surfaces.
+  // Link and primary-text roles: must work on both surfaces.
   ['primary-text', 'background', AA_TEXT],
   ['primary-text', 'surface', AA_TEXT],
+  ['primary-text', 'primary-surface', AA_TEXT],
   // Primary button fill with its own label.
   ['primary-foreground', 'primary', AA_TEXT],
   // Semantic feedback text, on the page and on its own tinted chip.
@@ -71,9 +68,8 @@ const REQUIRED = [
   ['success', 'success-surface', AA_TEXT],
   ['warning', 'background', AA_TEXT],
   ['warning', 'warning-surface', AA_TEXT],
-  ['primary-text', 'primary-surface', AA_TEXT],
-  ['progress', 'progress-surface', AA_TEXT],
   ['progress', 'background', AA_TEXT],
+  ['progress', 'progress-surface', AA_TEXT],
   // Boundaries and focus indicators only need the non-text threshold.
   ['border-strong', 'background', AA_NON_TEXT],
   ['border-strong', 'surface', AA_NON_TEXT],
@@ -87,36 +83,27 @@ const FORBIDDEN_AS_TEXT = [['accent', 'background']];
 
 const failures = [];
 
-function check(mode, tokens) {
-  for (const [fg, bg, min] of REQUIRED) {
-    if (!(fg in tokens) || !(bg in tokens)) {
-      failures.push(`[${mode}] missing token: ${fg in tokens ? bg : fg}`);
-      continue;
-    }
-    const ratio = contrast(tokens[fg], tokens[bg]);
-    if (ratio < min) {
-      failures.push(
-        `[${mode}] ${fg} (${tokens[fg]}) on ${bg} (${tokens[bg]}) = ${ratio.toFixed(2)}, needs ${min}`,
-      );
-    }
+for (const [fg, bg, min] of REQUIRED) {
+  if (!(fg in tokens) || !(bg in tokens)) {
+    failures.push(`missing token: ${fg in tokens ? bg : fg}`);
+    continue;
   }
-
-  if (mode === 'light') {
-    for (const [fg, bg] of FORBIDDEN_AS_TEXT) {
-      const ratio = contrast(tokens[fg], tokens[bg]);
-      if (ratio >= AA_TEXT) {
-        failures.push(
-          `[${mode}] ${fg} must stay decorative: it unexpectedly passes text contrast (${ratio.toFixed(2)}). Review why before removing this guard.`,
-        );
-      }
-    }
+  const ratio = contrast(tokens[fg], tokens[bg]);
+  if (ratio < min) {
+    failures.push(
+      `${fg} (${tokens[fg]}) on ${bg} (${tokens[bg]}) = ${ratio.toFixed(2)}, needs ${min}`,
+    );
   }
 }
 
-check('light', light);
-check('dark', dark);
-
-const total = REQUIRED.length * 2 + FORBIDDEN_AS_TEXT.length;
+for (const [fg, bg] of FORBIDDEN_AS_TEXT) {
+  const ratio = contrast(tokens[fg], tokens[bg]);
+  if (ratio >= AA_TEXT) {
+    failures.push(
+      `${fg} must stay decorative: it unexpectedly passes text contrast (${ratio.toFixed(2)}). Review why before removing this guard.`,
+    );
+  }
+}
 
 if (failures.length > 0) {
   console.error(`Contrast check FAILED (${failures.length} problem(s)):`);
@@ -126,12 +113,9 @@ if (failures.length > 0) {
   process.exit(1);
 }
 
+const total = REQUIRED.length + FORBIDDEN_AS_TEXT.length;
+
+console.log(`Contrast check passed: ${total} assertions (light theme).`);
 console.log(
-  `Contrast check passed: ${total} assertions across light and dark modes.`,
-);
-console.log(
-  `  light accent ${light.accent} on ${light.background} = ${contrast(light.accent, light.background).toFixed(2)} (decorative only, as intended)`,
-);
-console.log(
-  `  dark accent  ${dark.accent} on ${dark.background} = ${contrast(dark.accent, dark.background).toFixed(2)}`,
+  `  accent ${tokens.accent} on ${tokens.background} = ${contrast(tokens.accent, tokens.background).toFixed(2)} (decorative only, as intended)`,
 );

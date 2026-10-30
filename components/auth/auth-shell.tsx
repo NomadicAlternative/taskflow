@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import { SiteHeader } from '@/components/layout/site-header';
-import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 interface AuthShellProps {
   title: string;
@@ -19,9 +18,7 @@ export function AuthShell({
 }: AuthShellProps) {
   return (
     <>
-      <SiteHeader>
-        <ThemeToggle />
-      </SiteHeader>
+      <SiteHeader />
 
       <main className="flex flex-1 flex-col items-center justify-center px-6 py-12">
         <div className="rise flex w-full max-w-md flex-col gap-6">

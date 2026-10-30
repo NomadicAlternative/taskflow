@@ -1,53 +1,28 @@
-import Image from 'next/image';
 import Link from 'next/link';
 
-// The mark is rendered on its own — no tile, no ring. It is an illustration with
-// fine detail (three cards, an arrow and a check), so it needs room to read at
-// all; enclosing it in a fixed square only shrank it further.
-const SIZES = {
-  sm: { image: 62, wordmark: 'text-lg' },
-  lg: { image: 86, wordmark: 'text-xl' },
-} as const;
-
-function BrandContent({ size }: { size: keyof typeof SIZES }) {
-  const { image, wordmark } = SIZES[size];
-
+// Text-only wordmark. "Flow" carries a gradient from the deep navy of the
+// heading to the palette's light blue. WCAG exempts logotypes from contrast
+// requirements; the light end measures 2.70:1, so the wordmark stays at 20px
+// semibold to keep it legible.
+function Wordmark() {
   return (
-    <>
-      <Image
-        src="/taskflow-mark.png"
-        alt=""
-        width={image}
-        height={image}
-        priority
-        className="shrink-0 object-contain"
-        style={{ width: image, height: image }}
-      />
-      <span className={`text-heading font-semibold tracking-tight ${wordmark}`}>
-        TaskFlow
+    <span className="text-xl font-semibold tracking-tight text-heading">
+      Task
+      <span className="bg-linear-to-r from-brand-from to-brand-to bg-clip-text text-transparent">
+        Flow
       </span>
-    </>
+    </span>
   );
 }
 
-export function Brand({
-  href,
-  size = 'sm',
-}: {
-  href?: string;
-  size?: keyof typeof SIZES;
-}) {
+export function Brand({ href }: { href?: string }) {
   if (href === undefined) {
-    return (
-      <div className="flex items-center gap-2">
-        <BrandContent size={size} />
-      </div>
-    );
+    return <Wordmark />;
   }
 
   return (
-    <Link href={href} className="focus-ring flex items-center gap-2 rounded-md">
-      <BrandContent size={size} />
+    <Link href={href} className="focus-ring rounded-md">
+      <Wordmark />
     </Link>
   );
 }

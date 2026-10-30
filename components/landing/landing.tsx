@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { ProductPreview } from '@/components/landing/product-preview';
 import { SiteHeader } from '@/components/layout/site-header';
-import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 const CAPABILITIES = [
   {
@@ -22,7 +21,6 @@ export function Landing() {
   return (
     <>
       <SiteHeader>
-        <ThemeToggle />
         <Link
           href="/login"
           className="focus-ring rounded-md border border-border-strong px-3 py-1.5 text-sm font-medium transition-colors hover:bg-surface"
