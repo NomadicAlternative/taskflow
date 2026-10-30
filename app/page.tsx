@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { SignOutButton } from '@/components/auth/sign-out-button';
+import { EmptyState } from '@/components/ui/empty-state';
 import { getProjects } from '@/lib/projects';
 import { getCurrentUser, type SessionUser } from '@/lib/session';
 
@@ -62,7 +63,17 @@ async function ProjectList({ user }: { user: SessionUser }) {
       </header>
 
       {projects.length === 0 ? (
-        <p className="text-muted">No projects yet.</p>
+        <EmptyState
+          title="No projects yet"
+          description="Create your first project to start organizing tasks."
+        >
+          <Link
+            href="/projects/new"
+            className="focus-ring rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover"
+          >
+            Create a project
+          </Link>
+        </EmptyState>
       ) : (
         <ul className="flex flex-col gap-4">
           {projects.map((project) => (
