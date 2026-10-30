@@ -128,17 +128,19 @@ export function Landing() {
         </section>
       </main>
 
-      <footer className="border-t border-border">
-        <div className="mx-auto flex w-full max-w-5xl flex-col gap-2 px-6 py-6 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
-          <p>Built with Next.js, Prisma and Auth.js</p>
-          <a
-            href="https://github.com/NomadicAlternative/taskflow"
-            className="focus-ring rounded-sm font-medium text-primary-text underline-offset-4 hover:underline"
-            rel="noreferrer noopener"
-            target="_blank"
-          >
-            Source on GitHub
-          </a>
+      <footer className="bg-primary text-primary-foreground">
+        <div className="mx-auto flex w-full max-w-5xl justify-center px-6 py-6 text-sm">
+          <p>
+            &copy; {new Date().getFullYear()} Diego García ·{' '}
+            <a
+              href="https://github.com/NomadicAlternative"
+              className="rounded-sm font-medium underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-foreground"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Nomadic Alternative
+            </a>
+          </p>
         </div>
       </footer>
     </>
