@@ -12,8 +12,18 @@ import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
-const email = 'demo@taskflow.app';
-const password = 'taskflow123';
+// Defaults seed the demo account. Override to seed a personal account:
+//   node --env-file=.env scripts/seed-demo-user.mjs \
+//     --email dag40@taskflow.app --password artemio1 --name dag40
+const args = process.argv.slice(2);
+function arg(name, fallback) {
+  const index = args.indexOf(`--${name}`);
+  return index !== -1 && args[index + 1] ? args[index + 1] : fallback;
+}
+
+const email = arg('email', 'demo@taskflow.app');
+const password = arg('password', 'taskflow123');
+const name = arg('name', 'Demo User');
 
 const projects = [
   {
@@ -69,7 +79,7 @@ const user = await prisma.user.upsert({
   update: { hashedPassword: bcrypt.hashSync(password, 10) },
   create: {
     email,
-    name: 'Demo User',
+    name,
     hashedPassword: bcrypt.hashSync(password, 10),
   },
 });
