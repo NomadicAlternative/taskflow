@@ -75,11 +75,9 @@ export async function POST(
     );
   }
 
-  const task = await createTask({
+  const task = await createTask(user.id, id, {
     title: title.trim(),
     description: typeof description === 'string' ? description : undefined,
-    projectId: id,
-    ownerId: user.id,
   });
 
   if (task === null) {

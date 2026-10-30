@@ -1,16 +1,45 @@
+import type { Project as ProjectRow, Task as TaskRow } from '@prisma/client';
+import { isRecordNotFound, ownedProject, ownedProjects } from '@/lib/ownership';
 import { prisma } from '@/lib/prisma';
 import type {
   CreateProjectInput,
   Project,
   ProjectWithTaskCount,
+  ProjectWithTasks,
+  Task,
   UpdateProjectInput,
 } from '@/lib/types';
+
+// Every function is scoped to `ownerId` through `lib/ownership.ts`. A project
+// owned by another account is reported as missing (null / false), so callers
+// answer 404 and never reveal that it exists.
+
+export function toProject(row: ProjectRow): Project {
+  return {
+    id: row.id,
+    title: row.title,
+    description: row.description,
+    createdAt: row.createdAt,
+    ownerId: row.ownerId,
+  };
+}
+
+export function toTask(row: TaskRow): Task {
+  return {
+    id: row.id,
+    title: row.title,
+    description: row.description,
+    status: row.status,
+    createdAt: row.createdAt,
+    projectId: row.projectId,
+  };
+}
 
 export async function getProjects(
   ownerId: string,
 ): Promise<ProjectWithTaskCount[]> {
   const projects = await prisma.project.findMany({
-    where: { ownerId },
+    where: ownedProjects(ownerId),
     orderBy: { createdAt: 'desc' },
     include: {
       _count: { select: { tasks: true } },
@@ -18,40 +47,30 @@ export async function getProjects(
   });
 
   return projects.map((project) => ({
-    id: project.id,
-    title: project.title,
-    description: project.description,
-    createdAt: project.createdAt,
-    ownerId: project.ownerId,
+    ...toProject(project),
     taskCount: project._count.tasks,
   }));
 }
 
-// Owner-scoped: the caller passes the signed-in user id (from lib/session.ts),
-// never one taken from request input, so a user cannot read another user's
-// project by guessing its id.
-export async function getProjectById(
-  id: string,
+export async function getProject(
   ownerId: string,
-): Promise<Project | null> {
-  const project = await prisma.project.findFirst({
-    where: { id, ownerId },
+  projectId: string,
+): Promise<ProjectWithTasks | null> {
+  const project = await prisma.project.findUnique({
+    where: ownedProject(ownerId, projectId),
+    include: { tasks: { orderBy: { createdAt: 'asc' } } },
   });
 
   if (project === null) {
     return null;
   }
 
-  return {
-    id: project.id,
-    title: project.title,
-    description: project.description,
-    createdAt: project.createdAt,
-    ownerId: project.ownerId,
-  };
+  return { ...toProject(project), tasks: project.tasks.map(toTask) };
 }
 
-export async function createProject(input: CreateProjectInput): Promise<Project> {
+export async function createProject(
+  input: CreateProjectInput,
+): Promise<Project> {
   const project = await prisma.project.create({
     data: {
       title: input.title,
@@ -60,46 +79,46 @@ export async function createProject(input: CreateProjectInput): Promise<Project>
     },
   });
 
-  return {
-    id: project.id,
-    title: project.title,
-    description: project.description,
-    createdAt: project.createdAt,
-    ownerId: project.ownerId,
-  };
+  return toProject(project);
 }
 
-// Updates only the fields that are present. updateMany + where {id, ownerId}
-// enforces ownership: a mismatched owner updates zero rows and returns null.
 export async function updateProject(
-  id: string,
   ownerId: string,
+  projectId: string,
   input: UpdateProjectInput,
 ): Promise<Project | null> {
-  const result = await prisma.project.updateMany({
-    where: { id, ownerId },
-    data: {
-      title: input.title ?? undefined,
-      description: input.description ?? undefined,
-    },
-  });
-
-  if (result.count === 0) {
-    return null;
+  try {
+    const project = await prisma.project.update({
+      where: ownedProject(ownerId, projectId),
+      data: { title: input.title, description: input.description },
+    });
+    return toProject(project);
+  } catch (error) {
+    if (isRecordNotFound(error)) {
+      return null;
+    }
+    throw error;
   }
-
-  return getProjectById(id, ownerId);
 }
 
-// deleteMany + where {id, ownerId} enforces ownership and lets the caller
-// distinguish "deleted" from "not found / not yours" via the boolean.
 export async function deleteProject(
+  ownerId: string,
+  projectId: string,
+): Promise<boolean> {
+  try {
+    await prisma.project.delete({ where: ownedProject(ownerId, projectId) });
+    return true;
+  } catch (error) {
+    if (isRecordNotFound(error)) {
+      return false;
+    }
+    throw error;
+  }
+}
+
+export async function getProjectById(
   id: string,
   ownerId: string,
-): Promise<boolean> {
-  const result = await prisma.project.deleteMany({
-    where: { id, ownerId },
-  });
-
-  return result.count > 0;
+): Promise<Project | null> {
+  return getProject(ownerId, id);
 }
