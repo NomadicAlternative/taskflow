@@ -8,9 +8,44 @@ export const STATUS_LABEL: Record<TaskStatus, string> = {
 
 // Color reinforces the state; it never carries it alone. Each status also has a
 // distinct glyph so the list stays readable in grayscale or with color-blindness.
-const ICON: Record<TaskStatus, React.ReactNode> = {
-  TODO: (
-    <svg viewBox="0 0 16 16" aria-hidden="true" className="h-3.5 w-3.5">
+export function StatusIcon({
+  status,
+  className = 'h-3.5 w-3.5',
+}: {
+  status: TaskStatus;
+  className?: string;
+}) {
+  const shared = {
+    viewBox: '0 0 16 16',
+    'aria-hidden': true,
+    className,
+  } as const;
+
+  if (status === 'COMPLETED') {
+    return (
+      <svg {...shared}>
+        <circle
+          cx="8"
+          cy="8"
+          r="5.5"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+        />
+        <path
+          d="M5.2 8.2 7.1 10l3.7-3.8"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    );
+  }
+
+  return (
+    <svg {...shared}>
       <circle
         cx="8"
         cy="8"
@@ -19,42 +54,12 @@ const ICON: Record<TaskStatus, React.ReactNode> = {
         stroke="currentColor"
         strokeWidth="1.5"
       />
+      {status === 'IN_PROGRESS' ? (
+        <circle cx="8" cy="8" r="2.5" fill="currentColor" />
+      ) : null}
     </svg>
-  ),
-  IN_PROGRESS: (
-    <svg viewBox="0 0 16 16" aria-hidden="true" className="h-3.5 w-3.5">
-      <circle
-        cx="8"
-        cy="8"
-        r="5.5"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      />
-      <circle cx="8" cy="8" r="2.5" fill="currentColor" />
-    </svg>
-  ),
-  COMPLETED: (
-    <svg viewBox="0 0 16 16" aria-hidden="true" className="h-3.5 w-3.5">
-      <circle
-        cx="8"
-        cy="8"
-        r="5.5"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      />
-      <path
-        d="M5.2 8.2 7.1 10l3.7-3.8"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  ),
-};
+  );
+}
 
 const VARIANT: Record<TaskStatus, string> = {
   TODO: 'border-border-strong text-foreground',
@@ -67,7 +72,7 @@ export function StatusBadge({ status }: { status: TaskStatus }) {
     <span
       className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-xs font-medium ${VARIANT[status]}`}
     >
-      {ICON[status]}
+      <StatusIcon status={status} />
       {STATUS_LABEL[status]}
     </span>
   );

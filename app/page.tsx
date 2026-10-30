@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { SignOutButton } from '@/components/auth/sign-out-button';
+import { ProjectCard } from '@/components/project-card';
 import { EmptyState } from '@/components/ui/empty-state';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { getProjects } from '@/lib/projects';
@@ -44,9 +45,19 @@ function Landing() {
 async function ProjectList({ user }: { user: SessionUser }) {
   const projects = await getProjects(user.id);
 
+  const totals = projects.reduce(
+    (accumulator, project) => ({
+      tasks: accumulator.tasks + project.taskCount,
+      done: accumulator.done + project.counts.COMPLETED,
+    }),
+    { tasks: 0, done: 0 },
+  );
+  const overall =
+    totals.tasks === 0 ? 0 : Math.round((totals.done / totals.tasks) * 100);
+
   return (
     <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-6 px-6 py-10">
-      <header className="flex items-center justify-between gap-4 border-b border-border pb-4">
+      <header className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-4">
         <div>
           <h1 className="text-heading text-3xl font-semibold tracking-tight">
             TaskFlow
@@ -80,29 +91,40 @@ async function ProjectList({ user }: { user: SessionUser }) {
           </Link>
         </EmptyState>
       ) : (
-        <ul className="grid gap-3 md:grid-cols-2">
-          {projects.map((project) => (
-            <li key={project.id}>
-              <Link
-                href={`/projects/${project.id}`}
-                className="focus-ring flex items-center justify-between gap-4 rounded-lg border border-border bg-surface px-4 py-3 transition-colors hover:border-border-strong"
-              >
-                <div className="flex flex-col">
-                  <span className="font-medium">{project.title}</span>
-                  {project.description ? (
-                    <span className="text-sm text-muted">
-                      {project.description}
-                    </span>
-                  ) : null}
-                </div>
-                <span className="text-sm text-muted">
-                  {project.taskCount} task{project.taskCount === 1 ? '' : 's'}
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <>
+          <section
+            aria-label="Overview"
+            className="grid grid-cols-2 gap-3 sm:grid-cols-4"
+          >
+            <Stat label="Projects" value={String(projects.length)} />
+            <Stat label="Tasks" value={String(totals.tasks)} />
+            <Stat label="Completed" value={String(totals.done)} />
+            <Stat label="Overall progress" value={`${overall}%`} />
+          </section>
+
+          <section aria-label="Projects" className="flex flex-col gap-3">
+            <h2 className="text-sm font-medium tracking-wide text-muted uppercase">
+              Projects
+            </h2>
+            <div className="grid gap-3 md:grid-cols-2">
+              {projects.map((project) => (
+                <ProjectCard key={project.id} project={project} />
+              ))}
+            </div>
+          </section>
+        </>
       )}
     </main>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-lg border border-border bg-surface px-4 py-3">
+      <p className="text-2xl font-semibold tracking-tight tabular-nums">
+        {value}
+      </p>
+      <p className="text-xs text-muted">{label}</p>
+    </div>
   );
 }

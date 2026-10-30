@@ -29,8 +29,15 @@ export interface ProjectWithTasks extends Project {
   tasks: Task[];
 }
 
+export interface TaskCounts {
+  TODO: number;
+  IN_PROGRESS: number;
+  COMPLETED: number;
+}
+
 export interface ProjectWithTaskCount extends Project {
   taskCount: number;
+  counts: TaskCounts;
 }
 
 export interface CreateProjectInput {
