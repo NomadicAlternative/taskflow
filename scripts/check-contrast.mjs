@@ -64,11 +64,14 @@ const REQUIRED = [
   ['primary-text', 'surface', AA_TEXT],
   // Primary button fill with its own label.
   ['primary-foreground', 'primary', AA_TEXT],
-  // Semantic feedback text.
+  // Semantic feedback text, on the page and on its own tinted chip.
   ['danger', 'background', AA_TEXT],
   ['danger', 'surface', AA_TEXT],
   ['success', 'background', AA_TEXT],
+  ['success', 'success-surface', AA_TEXT],
   ['warning', 'background', AA_TEXT],
+  ['warning', 'warning-surface', AA_TEXT],
+  ['primary-text', 'primary-surface', AA_TEXT],
   // Boundaries and focus indicators only need the non-text threshold.
   ['border-strong', 'background', AA_NON_TEXT],
   ['border-strong', 'surface', AA_NON_TEXT],

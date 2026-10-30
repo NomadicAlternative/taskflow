@@ -120,7 +120,7 @@ async function ProjectList({ user }: { user: SessionUser }) {
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg border border-border bg-surface px-4 py-3">
+    <div className="rounded-lg border border-border bg-surface-raised px-4 py-3">
       <p className="text-2xl font-semibold tracking-tight tabular-nums">
         {value}
       </p>

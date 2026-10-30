@@ -62,9 +62,9 @@ export function StatusIcon({
 }
 
 const VARIANT: Record<TaskStatus, string> = {
-  TODO: 'border-border-strong text-foreground',
-  IN_PROGRESS: 'border-primary text-primary-text',
-  COMPLETED: 'border-border text-muted',
+  TODO: 'border-border-strong bg-transparent text-foreground',
+  IN_PROGRESS: 'border-primary/50 bg-primary-surface text-primary-text',
+  COMPLETED: 'border-transparent bg-success-surface text-success',
 };
 
 export function StatusBadge({ status }: { status: TaskStatus }) {

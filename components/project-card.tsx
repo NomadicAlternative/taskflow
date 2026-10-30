@@ -4,6 +4,26 @@ import type { ProjectWithTaskCount, TaskStatus } from '@/lib/types';
 
 const STATUS_ORDER: TaskStatus[] = ['TODO', 'IN_PROGRESS', 'COMPLETED'];
 
+// Full literal class names on purpose: Tailwind only emits classes it can see
+// in the source, so building these strings dynamically would drop the styles.
+const ACCENT_STRIPES = [
+  'border-l-project-1',
+  'border-l-project-2',
+  'border-l-project-3',
+  'border-l-project-4',
+  'border-l-project-5',
+];
+
+// Stable per-project accent: the same project always gets the same stripe,
+// derived from the id so it survives reordering.
+function accentStripe(id: string) {
+  let hash = 0;
+  for (const character of id) {
+    hash = (hash * 31 + character.charCodeAt(0)) % 1_000_003;
+  }
+  return ACCENT_STRIPES[hash % ACCENT_STRIPES.length];
+}
+
 // One card carries the whole project at a glance: identity, progress and the
 // per-status breakdown, so the dashboard is informative before opening anything.
 export function ProjectCard({ project }: { project: ProjectWithTaskCount }) {
@@ -14,7 +34,7 @@ export function ProjectCard({ project }: { project: ProjectWithTaskCount }) {
   return (
     <Link
       href={`/projects/${project.id}`}
-      className="focus-ring flex flex-col gap-3 rounded-lg border border-border bg-surface px-4 py-3 transition-colors hover:border-border-strong"
+      className={`focus-ring flex flex-col gap-3 rounded-lg border border-l-4 border-border bg-surface px-4 py-3 transition-colors hover:border-border-strong ${accentStripe(project.id)}`}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
@@ -39,7 +59,7 @@ export function ProjectCard({ project }: { project: ProjectWithTaskCount }) {
         className="h-1.5 w-full overflow-hidden rounded-full bg-border"
       >
         <span
-          className="block h-full rounded-full bg-primary"
+          className="block h-full rounded-full bg-linear-to-r from-primary to-accent"
           style={{ width: `${percent}%` }}
         />
       </div>

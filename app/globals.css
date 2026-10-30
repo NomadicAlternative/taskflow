@@ -35,7 +35,20 @@
   --danger: light-dark(#b42318, #f97066);
   --danger-surface: light-dark(#fdecea, #3a1a18);
   --success: light-dark(#067647, #47cd89);
+  --success-surface: light-dark(#e6f1ed, #0e3b34);
   --warning: light-dark(#b54708, #fdb022);
+  --warning-surface: light-dark(#f8ede6, #333620);
+
+  /* Filled chip backgrounds. Tints of the palette, not new hues. */
+  --primary-surface: light-dark(#e6f0f4, #003447);
+
+  /* Per-project identity, drawn from the palette ramp so a list reads as a set
+     of distinct items without introducing a single new hue. */
+  --project-1: light-dark(#003459, #00a8e8);
+  --project-2: light-dark(#007ea7, #33bdf0);
+  --project-3: light-dark(#00a8e8, #00a8e8);
+  --project-4: light-dark(#006b8f, #7fd4f5);
+  --project-5: light-dark(#6e8a9b, #a8c4d4);
 }
 
 /* Explicit choices win over the OS preference. `color-scheme` is what makes
@@ -72,7 +85,16 @@
   --color-danger: var(--danger);
   --color-danger-surface: var(--danger-surface);
   --color-success: var(--success);
+  --color-success-surface: var(--success-surface);
   --color-warning: var(--warning);
+  --color-warning-surface: var(--warning-surface);
+  --color-primary-surface: var(--primary-surface);
+
+  --color-project-1: var(--project-1);
+  --color-project-2: var(--project-2);
+  --color-project-3: var(--project-3);
+  --color-project-4: var(--project-4);
+  --color-project-5: var(--project-5);
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
