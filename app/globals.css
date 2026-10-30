@@ -125,3 +125,26 @@ body {
   /* The variable is defined by next/font in the root layout. */
   font-family: var(--font-sans), system-ui, sans-serif;
 }
+
+/* Cascade entrance: elements rise into place with a small stagger. The delay is
+   set per element inline; motion is removed entirely for reduced-motion users. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@utility rise {
+  animation: rise 460ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise {
+    animation: none;
+  }
+}

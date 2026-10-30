@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { ProductPreview } from '@/components/landing/product-preview';
-import { Brand } from '@/components/ui/brand';
+import { SiteHeader } from '@/components/layout/site-header';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 const CAPABILITIES = [
@@ -20,24 +20,19 @@ const CAPABILITIES = [
 
 export function Landing() {
   return (
-    <div className="flex flex-1 flex-col">
-      <header className="border-b border-border">
-        <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-6 py-4">
-          <Brand />
-          <div className="flex items-center gap-2">
-            <ThemeToggle />
-            <Link
-              href="/login"
-              className="focus-ring rounded-md border border-border-strong px-3 py-1.5 text-sm font-medium transition-colors hover:bg-surface"
-            >
-              Sign in
-            </Link>
-          </div>
-        </div>
-      </header>
+    <>
+      <SiteHeader>
+        <ThemeToggle />
+        <Link
+          href="/login"
+          className="focus-ring rounded-md border border-border-strong px-3 py-1.5 text-sm font-medium transition-colors hover:bg-surface"
+        >
+          Sign in
+        </Link>
+      </SiteHeader>
 
       <main className="mx-auto flex w-full max-w-5xl flex-col gap-16 px-6 py-12">
-        <section className="flex flex-col gap-5">
+        <section className="rise flex flex-col gap-5">
           <p className="text-sm font-medium tracking-wide text-primary-text uppercase">
             Project and task tracking
           </p>
@@ -65,7 +60,11 @@ export function Landing() {
           </div>
         </section>
 
-        <section aria-label="Product preview">
+        <section
+          aria-label="Product preview"
+          className="rise"
+          style={{ animationDelay: '120ms' }}
+        >
           <ProductPreview />
         </section>
 
@@ -75,13 +74,17 @@ export function Landing() {
         >
           <h2
             id="capabilities-heading"
-            className="text-heading text-2xl font-semibold tracking-tight"
+            className="text-heading rise text-2xl font-semibold tracking-tight"
           >
             What it actually does
           </h2>
           <div className="grid gap-6 sm:grid-cols-3">
             {CAPABILITIES.map((capability, index) => (
-              <div key={capability.title} className="flex flex-col gap-2">
+              <div
+                key={capability.title}
+                className="rise flex flex-col gap-2"
+                style={{ animationDelay: `${180 + index * 90}ms` }}
+              >
                 <p className="text-xs font-medium tabular-nums text-primary-text">
                   {String(index + 1).padStart(2, '0')}
                 </p>
@@ -94,7 +97,8 @@ export function Landing() {
 
         <section
           aria-labelledby="demo-heading"
-          className="flex flex-col gap-4 rounded-xl border border-border bg-surface p-6 sm:flex-row sm:items-center sm:justify-between"
+          className="rise flex flex-col gap-4 rounded-xl border border-border bg-surface p-6 sm:flex-row sm:items-center sm:justify-between"
+          style={{ animationDelay: '420ms' }}
         >
           <div className="flex flex-col gap-1">
             <h2
@@ -138,6 +142,6 @@ export function Landing() {
           </a>
         </div>
       </footer>
-    </div>
+    </>
   );
 }
