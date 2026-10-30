@@ -99,7 +99,7 @@ Demo credentials are `demo@taskflow.app` / `taskflow123`. They work only after s
 
 To test: sign in, select **New project**, add a task, change its status, edit it, refresh to confirm persistence, and delete the test task and project.
 
-To verify ownership manually, sign in as account B and copy a project URL. In a separate browser profile, sign in as account A and open that URL and its `/edit` page. Confirm access is refused without exposing B's content, then confirm B still has access. The automated ownership check and detailed evidence are part of the separate issue #3 security changes, pending integration into `main`.
+To verify ownership manually, sign in as account B and copy a project URL. In a separate browser profile, sign in as account A and open that URL and its `/edit` page. Confirm access is refused without exposing B's content, then confirm B still has access. The same checks run automatically: start the app on port 3100 and run `node --env-file=.env scripts/check-ownership.mjs` (30 assertions covering cross-account reads, writes and page renders). Detailed evidence lives in `specs/001-taskflow-mvp/ownership-verification.md`.
 
 ## Graphify (local code graph)
 

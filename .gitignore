@@ -45,3 +45,6 @@ next-env.d.ts
 /.graphify-venv/
 /graphify-out/
 /.agents/skills/graphify/
+
+# Local design sources. The rendered icons that ship live in app/.
+/assets/
