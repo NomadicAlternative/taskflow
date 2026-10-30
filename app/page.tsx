@@ -3,6 +3,7 @@ import { Landing } from '@/components/landing/landing';
 import { SignOutButton } from '@/components/auth/sign-out-button';
 import { ProjectCard } from '@/components/project-card';
 import { EmptyState } from '@/components/ui/empty-state';
+import { Brand } from '@/components/ui/brand';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { getProjects } from '@/lib/projects';
 import { getCurrentUser, type SessionUser } from '@/lib/session';
@@ -30,10 +31,10 @@ async function ProjectList({ user }: { user: SessionUser }) {
     <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-6 px-6 py-10">
       <header className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-4">
         <div>
-          <h1 className="text-heading text-3xl font-semibold tracking-tight">
-            TaskFlow
+          <h1>
+            <Brand href="/" />
           </h1>
-          <p className="text-sm text-muted">
+          <p className="mt-1 text-sm text-muted">
             Signed in as {user.name ?? user.email}
           </p>
         </div>

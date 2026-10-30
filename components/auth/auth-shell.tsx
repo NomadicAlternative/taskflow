@@ -1,5 +1,5 @@
-import Link from 'next/link';
 import type { ReactNode } from 'react';
+import { Brand } from '@/components/ui/brand';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 interface AuthShellProps {
@@ -23,17 +23,9 @@ export function AuthShell({
       <div className="absolute top-6 right-6">
         <ThemeToggle />
       </div>
-      <Link
-        href="/"
-        className="focus-ring inline-flex w-fit items-center gap-2 rounded-md"
-      >
-        <span className="grid h-8 w-8 place-items-center rounded-lg bg-primary text-sm font-bold text-primary-foreground">
-          TF
-        </span>
-        <span className="text-heading text-lg font-semibold tracking-tight">
-          TaskFlow
-        </span>
-      </Link>
+      <div className="w-fit">
+        <Brand href="/" size="lg" />
+      </div>
 
       <div className="flex flex-col gap-1">
         <h1 className="text-heading text-2xl font-semibold tracking-tight">

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { ProductPreview } from '@/components/landing/product-preview';
+import { Brand } from '@/components/ui/brand';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 const CAPABILITIES = [
@@ -22,14 +23,7 @@ export function Landing() {
     <div className="flex flex-1 flex-col">
       <header className="border-b border-border">
         <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-6 py-4">
-          <div className="flex items-center gap-2">
-            <span className="grid h-8 w-8 place-items-center rounded-lg bg-primary text-sm font-bold text-primary-foreground">
-              TF
-            </span>
-            <span className="text-heading text-lg font-semibold tracking-tight">
-              TaskFlow
-            </span>
-          </div>
+          <Brand />
           <div className="flex items-center gap-2">
             <ThemeToggle />
             <Link
