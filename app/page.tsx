@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { SignOutButton } from '@/components/auth/sign-out-button';
 import { EmptyState } from '@/components/ui/empty-state';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { getProjects } from '@/lib/projects';
 import { getCurrentUser, type SessionUser } from '@/lib/session';
 
@@ -12,7 +13,10 @@ export default async function Home() {
 
 function Landing() {
   return (
-    <main className="flex flex-1 flex-col items-center justify-center gap-6 px-6 py-16 text-center">
+    <main className="relative flex flex-1 flex-col items-center justify-center gap-6 px-6 py-16 text-center">
+      <div className="absolute top-6 right-6">
+        <ThemeToggle />
+      </div>
       <h1 className="text-heading text-4xl font-semibold tracking-tight">
         TaskFlow
       </h1>
@@ -52,6 +56,7 @@ async function ProjectList({ user }: { user: SessionUser }) {
           </p>
         </div>
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           <Link
             href="/projects/new"
             className="focus-ring rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover"

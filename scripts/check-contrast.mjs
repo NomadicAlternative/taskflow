@@ -2,7 +2,8 @@
 // WCAG threshold against the backgrounds it is actually used on.
 //
 // Reads the tokens straight out of app/globals.css, so the palette is never
-// duplicated here and a token edit cannot silently skip the check.
+// duplicated here and a token edit cannot silently skip the check. Tokens use
+// `light-dark(light, dark)`, so both modes come from a single declaration.
 //
 // Run with: pnpm check:contrast
 import { readFileSync } from 'node:fs';
@@ -13,40 +14,22 @@ const css = readFileSync(CSS_PATH, 'utf8');
 const AA_TEXT = 4.5;
 const AA_NON_TEXT = 3;
 
-function parseTokens(block) {
-  const tokens = {};
-  for (const match of block.matchAll(/--([a-z-]+):\s*(#[0-9a-fA-F]{6})\s*;/g)) {
-    tokens[match[1]] = match[2].toUpperCase();
-  }
-  return tokens;
+const TOKEN_PATTERN =
+  /--([a-z-]+):\s*light-dark\(\s*(#[0-9a-fA-F]{6})\s*,\s*(#[0-9a-fA-F]{6})\s*\)/g;
+
+const light = {};
+const dark = {};
+
+for (const match of css.matchAll(TOKEN_PATTERN)) {
+  light[match[1]] = match[2].toUpperCase();
+  dark[match[1]] = match[3].toUpperCase();
 }
 
-function requireBlock(source, label, finder) {
-  const block = finder(source);
-  if (block === null) {
-    throw new Error(`Could not find the ${label} token block in globals.css`);
-  }
-  const tokens = parseTokens(block);
-  if (Object.keys(tokens).length === 0) {
-    throw new Error(`The ${label} token block has no hex tokens`);
-  }
-  return tokens;
+if (Object.keys(light).length === 0) {
+  throw new Error(
+    'No `light-dark(...)` tokens found in globals.css — the contrast guard would silently pass.',
+  );
 }
-
-const darkStart = css.indexOf('@media (prefers-color-scheme: dark)');
-if (darkStart === -1) {
-  throw new Error('Could not find the dark-mode media query in globals.css');
-}
-
-const light = requireBlock(css, 'light-mode', (source) => {
-  const match = source.slice(0, darkStart).match(/:root\s*\{([^}]*)\}/);
-  return match ? match[1] : null;
-});
-
-const dark = requireBlock(css, 'dark-mode', (source) => {
-  const match = source.slice(darkStart).match(/:root\s*\{([^}]*)\}/);
-  return match ? match[1] : null;
-});
 
 function channelLuminance(value) {
   const ratio = value / 255;

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 interface AuthShellProps {
   title: string;
@@ -18,7 +19,10 @@ export function AuthShell({
   footer,
 }: AuthShellProps) {
   return (
-    <main className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center gap-6 px-6 py-12">
+    <main className="relative mx-auto flex w-full max-w-md flex-1 flex-col justify-center gap-6 px-6 py-12">
+      <div className="absolute top-6 right-6">
+        <ThemeToggle />
+      </div>
       <Link
         href="/"
         className="focus-ring inline-flex w-fit items-center gap-2 rounded-md"
